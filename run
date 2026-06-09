@@ -1,2 +1,2 @@
 
-QEMU_AUDIO_DRV=none qemu-system-arm -M versatilepb -nographic -kernel build/kernel.bin
+QEMU_AUDIO_DRV=none qemu-system-arm -M versatilepb -nographic -kernel build/kernel.bin -semihosting
