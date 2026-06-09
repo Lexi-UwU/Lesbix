@@ -5,3 +5,84 @@ int strcmp(const char *s1, const char *s2) {
     }
     return *(const unsigned char*)s1 - *(const unsigned char*)s2;
 }
+
+
+// Define standard types manually
+//typedef unsigned long size_t;
+//#define NULL ((void *)0)
+
+// Helper: Find length of the initial segment consisting only of accepted characters
+ size_t strspn(const char *str, const char *delim) {
+    size_t count = 0;
+    while (str[count] != '\0') {
+        int found = 0;
+        for (const char *d = delim; *d != '\0'; d++) {
+            if (str[count] == *d) {
+                found = 1;
+                break;
+            }
+        }
+        if (!found) break;
+        count++;
+    }
+    return count;
+}
+
+// Helper: Locate first occurrence of any character from delim in str
+ char *strpbrk(const char *str, const char *delim) {
+    while (*str != '\0') {
+        for (const char *d = delim; *d != '\0'; d++) {
+            if (*str == *d) return (char *)str;
+        }
+        str++;
+    }
+    return NULL;
+}
+
+// The strtok implementation
+char *strtok(char *str, const char *delim) {
+    static char *last_token = NULL;
+    char *token;
+
+    if (str == NULL) {
+        str = last_token;
+    }
+
+    if (str == NULL) return NULL;
+
+    str += strspn(str, delim);
+
+    if (*str == '\0') {
+        last_token = NULL;
+        return NULL;
+    }
+
+    token = str;
+    str = strpbrk(token, delim);
+
+    if (str == NULL) {
+        last_token = NULL;
+    } else {
+        *str = '\0';
+        last_token = str + 1;
+    }
+
+    return token;
+}
+
+
+char *strncpy(char *dest, const char *src, size_t n) {
+    size_t i;
+
+    // 1. Copy up to n characters
+    for (i = 0; i < n && src[i] != '\0'; i++) {
+        dest[i] = src[i];
+    }
+
+    // 2. Pad the remainder with '\0'
+    for (; i < n; i++) {
+        dest[i] = '\0';
+    }
+
+    return dest;
+}
