@@ -11,4 +11,6 @@ void command_help(){
     send_uart0('\n');
     print_uart0("   help : show this list");
     send_uart0('\n');
+    print_uart0("   exit : stop the kernel");
+    send_uart0('\n');
 }
