@@ -1,0 +1,5 @@
+arm-none-eabi-as -mcpu=arm926ej-s src/startup.s -o build/startup.o
+arm-none-eabi-gcc -c -mcpu=arm926ej-s src/main.c -o build/main.o -nostdlib
+arm-none-eabi-ld -T src/linker.ld build/startup.o build/main.o -o build/kernel.elf
+arm-none-eabi-objcopy -O binary build/kernel.elf build/kernel.bin
+
