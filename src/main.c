@@ -1,23 +1,41 @@
-volatile unsigned int * const UART0DR = (unsigned int *)0x101f1000;
-volatile unsigned int * const UART0FR = (unsigned int *)0x101f1018;
+#include "uart.c"
 
-void print_uart0(const char *s) {
-    while(*s != '\0') {
-        // Wait until the 'TXFF' (Transmit FIFO Full) bit is 0
-        while(*UART0FR & 0x20) {
-            // Do nothing, wait for hardware to be ready
-        }
-        *UART0DR = (unsigned int)(*s);
-        s++;
-    }
-}
+
+#define MAX_BUF 100
+char line_buffer[MAX_BUF];
+int index = 0;
+
 
 void main(void) {
-    print_uart0("Hello, Bare Metal World!\n\0");
+
     // In a real bare-metal app, you would initialize 
     // a hardware register here to blink an LED or 
     // write to a serial port address.
+    print_uart0("Hello, Bare Metal World!\n\0");
     while(1) {
-        // Infinite loop
+        char received = read_uart0();
+        if (received == '\r'){
+
+            send_uart0('\n');
+            send_uart0('\r');
+            line_buffer[index] = '\0';
+            print_uart0(line_buffer);
+            send_uart0('\n');
+            print_uart0(">");
+            index = 0;
+        }else if (received == '\b'|| received == 127) {
+            // Visually delete the character on the terminal
+            if (index > 0) {
+                index --;
+                send_uart0('\b');
+                send_uart0(' ');
+                send_uart0('\b');
+            }
+        }
+        else{
+            line_buffer[index] = received; // Store character
+            index++;
+            send_uart0(received); // Echo the character back
+        }
     }
 }
