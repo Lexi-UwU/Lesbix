@@ -1,3 +1,5 @@
+#include <stdlib.h>
+
 #ifndef UART_C
     #include "uart.c"
 #endif
@@ -14,6 +16,8 @@
 int LESBIX_RUNNING = 1;
 
 #include "cli.c"
+
+
 
 
 void delay(int count) {

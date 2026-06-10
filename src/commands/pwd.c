@@ -8,13 +8,13 @@
 
 
 
-void command_ls(const char *s){
+void command_pwd(){
 
 
     //FILESYSTEM_GET_FILES("/");
     //print_uart0("ls : Command not implemented\n");
-    print_uart0("Return Code:");
-    print_uart0(FILESYSTEM_GET_FILES(FILESYSTEM_CURRENT_WORKING_DIRECTORY));
+    print_uart0(FILESYSTEM_CURRENT_WORKING_DIRECTORY);
+    //rint_uart0(FILESYSTEM_GET_FILES(FILESYSTEM_CURRENT_WORKING_DIRECTORY));
     send_uart0('\n');
 
 

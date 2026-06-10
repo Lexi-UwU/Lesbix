@@ -19,6 +19,7 @@
 #include "commands/cd.c"
 #include "commands/mkdir.c"
 #include "commands/cat.c"
+#include "commands/pwd.c"
 
 
 void handle_command(const char *s) {
@@ -52,6 +53,8 @@ void handle_command(const char *s) {
         command_mkdir(s);
     }else if (strcmp(cmd, "cat") == 0){
         command_cat(s);
+    }else if (strcmp(cmd, "pwd") == 0){
+        command_pwd();
     }
 
     else{
