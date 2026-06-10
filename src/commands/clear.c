@@ -6,5 +6,5 @@
 
 void command_clear(){
 
-    print_uart0("\033[2J");
+    print_uart0("\033[2J\x1B[H");
 }

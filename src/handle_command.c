@@ -15,8 +15,10 @@
 #include "commands/exit.c"
 #include "commands/echo.c"
 #include "commands/clear.c"
-
-
+#include "commands/ls.c"
+#include "commands/cd.c"
+#include "commands/mkdir.c"
+#include "commands/cat.c"
 
 
 void handle_command(const char *s) {
@@ -42,6 +44,14 @@ void handle_command(const char *s) {
         command_echo(s);
     }else if (strcmp(cmd, "clear") == 0){
         command_clear();
+    }else if (strcmp(cmd, "ls") == 0){
+        command_ls(s);
+    }else if (strcmp(cmd, "cd") == 0){
+        command_cd(s);
+    }else if (strcmp(cmd, "mkdir") == 0){
+        command_mkdir(s);
+    }else if (strcmp(cmd, "cat") == 0){
+        command_cat(s);
     }
 
     else{

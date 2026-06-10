@@ -7,7 +7,7 @@
 
 
 void command_help(){
-    print_uart0("COMMANDS: ");
+    print_uart0("available commands: ");
     send_uart0('\n');
     print_uart0("   help  : show this list");
     send_uart0('\n');
