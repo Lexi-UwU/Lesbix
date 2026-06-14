@@ -26,6 +26,26 @@ char *FILESYSTEM_GET_FILES(const char *path){
 }
 
 
+char *FILESYSTEM_GET_FILE(const char *path){
+    //Find driver and send appropriate command
+
+
+    return EXAMPLE_DRIVER_RUN(FILESYSTEM_CONSTS_FILE_READ,path, "");
+
+}
+
+
+char *FILESYSTEM_GET_FILE_BYTES(const char *path){
+    //Find driver and send appropriate command
+
+
+    return EXAMPLE_DRIVER_RUN(FILESYSTEM_CONSTS_FILE_READ_BYTES,path, "");
+
+}
+
+
+
+
 int FILESYSTEM_SET_DIRECTORY(char *path){
 
     FILESYSTEM_CURRENT_WORKING_DIRECTORY = path;

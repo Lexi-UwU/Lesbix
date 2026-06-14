@@ -1,4 +1,6 @@
 
+#define COMMAND_ECHO
+
 #ifndef UART_C
     #include "uart.c"
 #endif
