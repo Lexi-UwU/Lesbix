@@ -22,6 +22,7 @@
 
 
 //More functionality needs to be added in the future
+//Run Command
 void command_hazelnut(const char *s){
 
 

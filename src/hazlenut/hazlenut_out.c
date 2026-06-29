@@ -1,0 +1,14 @@
+//Abstraction layer for hazlenut operations like output
+
+
+#define HVM_ABSTRACTION
+
+#ifndef UART_C
+    #include "../comands/uart.c"
+#endif
+
+
+
+void hvm_print(const char *s) {
+    print_uart0(s);
+}
