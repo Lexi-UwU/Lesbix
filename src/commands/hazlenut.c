@@ -18,6 +18,11 @@
     #include "uart.c"
 #endif
 
+#ifndef HVM_CORE
+    #include "../hazelut/hazlenut_vm.c"
+#endif
+
+
 
 
 
@@ -26,7 +31,10 @@
 void command_hazelnut(const char *s){
 
 
-    FILESYSTEM_GET_FILE(FILESYSTEM_MERGE_PATHS(FILESYSTEM_CURRENT_WORKING_DIRECTORY,s));
+    //Get file from filesystem
+    char *file =  FILESYSTEM_GET_FILE(FILESYSTEM_MERGE_PATHS(FILESYSTEM_CURRENT_WORKING_DIRECTORY,s));
+
+    hazlenut_run_file(file);
 
 }
 
