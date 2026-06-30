@@ -30,7 +30,7 @@ void delay(int count) {
 void main(void) {
     //initialise_lcd();
 
-    delay(1000000);
+    // delay(1000000);
 
     //draw_pixel(32,32,0xffff);
 

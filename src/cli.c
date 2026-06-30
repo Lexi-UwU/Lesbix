@@ -5,7 +5,7 @@
 #include "handle_command.c"
 
 
-#define MAX_BUF 100
+#define MAX_BUF 128
 char line_buffer[MAX_BUF];
 int command_buffer_index = 0;
 
