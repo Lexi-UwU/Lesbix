@@ -24,10 +24,10 @@ set(ALL_FILES
         src/hazelnut/hazelnut_vm.c
         src/tools/halt.c
         src/tools/utils.c
-        src/vga/graphics.c
-        src/vga/initialise.c
-        src/vga/vga.c
-        src/vga/vgatext.c
+        src/graphics/vga/graphics_vga.c
+        src/graphics/vga/initialise.c
+        src/graphics/vga/vga.c
+        src/graphics/vga/vgatext.c
         src/cli/cli.c
         src/handle_command/handle_command.c
         src/main.c
@@ -53,10 +53,10 @@ set(ALL_FILES
         src/handle_command/handle_command.h
         src/hazelnut/hazelnut_vm.h
         src/hazelnut/hazelnut_out.h
-        src/vga/graphics.h
-        src/vga/initialise.h
-        src/vga/vga.h
-        src/vga/vgatext.h
+        src/graphics/vga/graphics_vga.h
+        src/graphics/vga/initialise.h
+        src/graphics/vga/vga.h
+        src/graphics/vga/vgatext.h
 )
 
 # Branch configuration based on whether the ARM toolchain is active
@@ -65,7 +65,13 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Generic")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mcpu=arm926ej-s -nostdlib -ffreestanding")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -T ${CMAKE_CURRENT_SOURCE_DIR}/src/linker.ld -nostdlib")
 
-    add_executable(kernel.elf ${ALL_FILES})
+    add_executable(kernel.elf ${ALL_FILES}
+            src/graphics/graphics.c
+            src/graphics/graphics.c
+            src/graphics/xlib_driver/xlib_driver.c
+            src/graphics/xlib_driver/xlib_driver.h
+            src/graphics/graphics.c
+            src/graphics/graphics.c)
 
     add_custom_command(TARGET kernel.elf POST_BUILD
         COMMAND arm-none-eabi-objcopy -O binary kernel.elf kernel.bin
@@ -75,5 +81,6 @@ else()
     # Desktop Host Target
     # Exclude bare-metal startup.s from desktop builds since it uses ARM assembly syntax
     list(REMOVE_ITEM ALL_FILES src/startup.s)
-    add_executable(Lesbix ${ALL_FILES})
+    add_executable(Lesbix ${ALL_FILES}
+            src/graphics/graphics.c)
 endif()
