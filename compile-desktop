@@ -1,0 +1,14 @@
+#!/bin/bash
+set -e
+
+echo "Creating and navigating to build-desktop directory..."
+mkdir -p build-desktop
+cd build-desktop
+
+echo "Running CMake for desktop host..."
+cmake ..
+
+echo "Building desktop target..."
+make
+
+echo "Build complete! Executable is ready in build-desktop/"

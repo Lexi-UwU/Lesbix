@@ -1,6 +1,6 @@
 QEMU_AUDIO_DRV=none qemu-system-arm \
     -M versatilepb \
-    -kernel build/kernel.bin \
+    -kernel build-arm/kernel.bin \
     -semihosting \
     -nographic \
     -no-reboot

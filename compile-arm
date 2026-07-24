@@ -1,0 +1,14 @@
+#!/bin/bash
+set -e
+
+echo "Creating and navigating to build-arm directory..."
+mkdir -p build-arm
+cd build-arm
+
+echo "Running CMake with the ARM toolchain..."
+cmake -DCMAKE_TOOLCHAIN_FILE=../arm-toolchain.cmake ..
+
+echo "Building ARM kernel..."
+make
+
+echo "Build complete! kernel.bin is ready in build-arm/"

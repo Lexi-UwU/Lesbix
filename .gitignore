@@ -1,2 +1,4 @@
 build
 enter_distrobox
+build-arm
+build-desktop
