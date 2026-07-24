@@ -1,7 +1,8 @@
 #!/bin/bash
 set -e
 
-echo "Creating and navigating to build-arm directory..."
+echo "Cleaning build-arm directory..."
+rm -rf build-arm
 mkdir -p build-arm
 cd build-arm
 

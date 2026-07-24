@@ -1,1 +1,1 @@
-qemu-system-arm -M versatilepb -nographic -kernel build/kernel.bin -s -S
+qemu-system-arm -M versatilepb -kernel build-arm/kernel.bin -nographic -d in_asm,cpu

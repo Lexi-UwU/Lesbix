@@ -30,7 +30,7 @@ void delay(int count) {
 #include "./commands/help.h"
 
 
-void main(void) {
+int main(void) {
     //initialise_lcd();
 
     // delay(1000000);
@@ -48,11 +48,14 @@ void main(void) {
     LESBIX_RUNNING = 1;
 
 
+
     print_uart0("Welcome to Lesbix\n\0");
     print_uart0("\n");
     command_help();
     print_uart0("\n");
     print_uart0(">");
+
+
 
 
     while(LESBIX_RUNNING) {
@@ -63,4 +66,6 @@ void main(void) {
 
     }
     halt();
+    return 0;
+
 }

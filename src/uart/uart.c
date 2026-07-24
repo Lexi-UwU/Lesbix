@@ -17,7 +17,9 @@ volatile unsigned int * const UART0DR = (unsigned int *)0x101f1000;
 volatile unsigned int * const UART0FR = (unsigned int *)0x101f1018;
 
 void print_uart0(const char *s) {
-#if defined(__arm__) || defined(__aarch64__)
+
+    #if defined(__arm__) || defined(__aarch64__)
+
     while(*s != '\0') {
         // Wait until the 'TXFF' (Transmit FIFO Full) bit is 0
         while(*UART0FR & 0x20) {
@@ -26,6 +28,7 @@ void print_uart0(const char *s) {
         *UART0DR = (unsigned int)(*s);
         s++;
     }
+
 #else
     printf(s);
 #endif
