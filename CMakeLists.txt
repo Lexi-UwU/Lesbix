@@ -82,5 +82,7 @@ else()
     # Exclude bare-metal startup.s from desktop builds since it uses ARM assembly syntax
     list(REMOVE_ITEM ALL_FILES src/startup.s)
     add_executable(Lesbix ${ALL_FILES}
-            src/graphics/graphics.c)
+            src/graphics/graphics.c
+            src/file/drivers/linux_file_driver.c
+            src/file/drivers/linux_file_driver.h)
 endif()

@@ -11,26 +11,45 @@
 
 
 
+#if defined(__arm__) || defined(__aarch64__)
+#else
+    #include "drivers/linux_file_driver.h"
+
+#endif
+
 #include "drivers/example_driver.h"
 
 
 char * FILESYSTEM_CURRENT_WORKING_DIRECTORY = "/";
 
 
+char* FILESYSTEM_RUN_CHAR(const char *command,const char *path, const char *data) {
+#if defined(__arm__) || defined(__aarch64__)
+    return EXAMPLE_DRIVER_RUN(command,path,data);
+#else
+#ifdef LESBIX_LINUX_FILE_DRIVER_H
+    return LINUX_FILE_DRIVER_RUN(command,path,data);
+#endif
+    #endif
+
+}
+
 char *FILESYSTEM_GET_FILES(const char *path){
     //Find driver and send appropriate command
 
 
-    return EXAMPLE_DRIVER_RUN(FILESYSTEM_CONSTS_FOLDER_READ,path, "");
+    return FILESYSTEM_RUN_CHAR(FILESYSTEM_CONSTS_FOLDER_READ,path, "");
 
 }
+
+
 
 
 char *FILESYSTEM_GET_FILE(const char *path){
     //Find driver and send appropriate command
 
 
-    return EXAMPLE_DRIVER_RUN(FILESYSTEM_CONSTS_FILE_READ,path, "");
+    return FILESYSTEM_RUN_CHAR(FILESYSTEM_CONSTS_FILE_READ,path, "");
 
 }
 
@@ -39,7 +58,7 @@ char *FILESYSTEM_GET_FILE_BYTES(const char *path){
     //Find driver and send appropriate command
 
 
-    return EXAMPLE_DRIVER_RUN(FILESYSTEM_CONSTS_FILE_READ_BYTES,path, "");
+    return FILESYSTEM_RUN_CHAR(FILESYSTEM_CONSTS_FILE_READ_BYTES,path, "");
 
 }
 

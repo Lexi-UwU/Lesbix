@@ -1,5 +1,7 @@
 #define TOOLS_UTILS
 
+#if defined(__arm__) || defined(__aarch64__)
+
 // Define standard types manually
 typedef unsigned long size_t;
 #define NULL ((void *)0)
@@ -145,3 +147,9 @@ void *malloc(size_t size) {
     heap_ptr += size; // Simply "bump" the pointer forward
     return ptr;
 }
+
+#else
+
+#include <string.h>
+
+#endif
