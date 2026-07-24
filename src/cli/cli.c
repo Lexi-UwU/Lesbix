@@ -1,8 +1,8 @@
 #ifndef UART_C
-    #include "uart.c"
+    #include "../uart/uart.h"
 #endif
 
-#include "handle_command.c"
+#include "../handle_command/handle_command.h"
 
 
 #define MAX_BUF 128
@@ -11,7 +11,7 @@ int command_buffer_index = 0;
 
 void handle_cli(){
     char received = read_uart0();
-    if (received == '\r'){
+    if (received == '\r' || received == '\n'){
 
         send_uart0('\n');
         send_uart0('\r');

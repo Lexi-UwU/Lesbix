@@ -4,7 +4,7 @@
 #define HVM_ABSTRACTION
 
 #ifndef UART_C
-    #include "../commands/uart.c"
+    #include "../uart/uart.h"
 #endif
 
 

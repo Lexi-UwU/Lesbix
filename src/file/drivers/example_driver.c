@@ -1,13 +1,15 @@
 
 #ifndef FILESYSTEM_CONSTS
-    #include "consts.c"
+    #include "../consts.h"
 #endif
 
 
 
 #ifndef UART_C
-    #include "uart.c"
+    #include "../../uart/uart.h"
 #endif
+
+#include "../../tools/utils.h"
 
 
 //This driver creates a small hardcoded read only memory format, this should only be used as an example for how the interface works
@@ -23,7 +25,7 @@
 char* EXAMPLE_DRIVER_FOLDER_READ(const char *path){
 
     if (strcmp(path, "/root") == 0) {
-        return "001\nfile1.txt\nfile2.txt\ntest.hazle"; // String literal is stored in ROM
+        return "001\nfile1.txt\nfile2.txt\ntest.hazel"; // String literal is stored in ROM
     }
     if (strcmp(path, "/") == 0) {
         return "001\nfile1.txt\nfile2.txt"; // String literal is stored in ROM
@@ -34,7 +36,7 @@ char* EXAMPLE_DRIVER_FOLDER_READ(const char *path){
 
 char* EXAMPLE_DRIVER_FILE_READ(const char *path){
 
-    if (strcmp(path, "/test.hazle") == 0) {
+    if (strcmp(path, "/test.hazel") == 0) {
         return ""; // String literal is stored in ROM
     }
     return "010\nError: Path not found";

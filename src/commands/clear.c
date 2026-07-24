@@ -1,6 +1,6 @@
 
 #ifndef UART_C
-    #include "uart.c"
+    #include "./uart/uart.h"
 #endif
 
 

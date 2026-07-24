@@ -1,13 +1,14 @@
+#include <stdio.h>
 #include <stdlib.h>
 
 #ifndef UART_C
-    #include "uart.c"
+    #include "uart/uart.h"
 #endif
 
 
 
 #ifndef TOOLS_HALT
-    #include "tools/halt.c"
+    #include "tools/halt.h"
 #endif
 
 //#include "vga/vga.c"
@@ -15,7 +16,7 @@
 //This has to be defined before the CLI to avoid a crash
 int LESBIX_RUNNING = 1;
 
-#include "cli.c"
+#include "cli/cli.h"
 
 
 
@@ -25,6 +26,8 @@ void delay(int count) {
         __asm__("nop"); // Does nothing, just burns cycles
     }
 }
+
+#include "./commands/help.h"
 
 
 void main(void) {
@@ -37,6 +40,8 @@ void main(void) {
     //clear_screen(0xFFFFFF);
 
     //draw_diagonal();
+
+    //printf("Hello World!\n");
 
 
 
@@ -51,8 +56,9 @@ void main(void) {
 
 
     while(LESBIX_RUNNING) {
+        //printf("Hello World!\n");
 
-        //clear_screen(0xFFF);
+        //clear_screen(0xFFF);b
         handle_cli();
 
     }

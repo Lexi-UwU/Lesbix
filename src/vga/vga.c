@@ -1,3 +1,3 @@
-#include "graphics.c"
-#include "initialise.c"
+#include "graphics.h"
+#include "initialise.h"
 

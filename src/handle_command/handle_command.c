@@ -1,25 +1,25 @@
 #include <string.h>
 
 #ifndef UART_C
-    #include "uart.c"
+    #include "../uart/uart.h"
 #endif
 
 #ifndef TOOLS_UTILS
-    #include "tools/utils.c"
+    #include "../tools/utils.h"
 #endif
 
 
 
 
-#include "commands/help.c"
-#include "commands/exit.c"
-#include "commands/echo.c"
-#include "commands/clear.c"
-#include "commands/ls.c"
-#include "commands/cd.c"
-#include "commands/mkdir.c"
-#include "commands/cat.c"
-#include "commands/pwd.c"
+#include "../commands/help.h"
+#include "../commands/exit.h"
+#include "../commands/echo.h"
+#include "../commands/clear.h"
+#include "../commands/ls.h"
+#include "../commands/cd.h"
+#include "../commands/mkdir.h"
+#include "../commands/cat.h"
+#include "../commands/pwd.h"
 
 
 void handle_command(const char *s) {

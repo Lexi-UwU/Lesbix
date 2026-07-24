@@ -1,7 +1,7 @@
 #define HVM_CORE
 
 #ifndef HVM_ABSTRACTION
-    #include "hazlenut_out.c"
+    #include "hazelnut_out.h"
 #endif
 
 

@@ -1,12 +1,13 @@
 
 #ifndef UART_C
-    #include "uart.c"
+    #include "./uart/uart.h"
 #endif
 
 #ifndef FILESYSTEM_MANAGER
-    #include "../file/filesystem.c"
+    #include "../file/filesystem.h"
 #endif
 
+#include "../tools/utils.h"
 
 
 void command_cd(const char *s){

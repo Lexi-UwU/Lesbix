@@ -2,16 +2,16 @@
 #define FILESYSTEM_MANAGER
 
 #ifndef FILESYSTEM_CONSTS
-    #include "consts.c"
+    #include "consts.h"
 #endif
 
 #ifndef TOOLS_UTILS
-    #include "../tools/utils.c"
+    #include "../tools/utils.h"
 #endif
 
 
 
-#include "drivers/example_driver.c"
+#include "drivers/example_driver.h"
 
 
 char * FILESYSTEM_CURRENT_WORKING_DIRECTORY = "/";

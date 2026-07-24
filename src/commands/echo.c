@@ -2,8 +2,11 @@
 #define COMMAND_ECHO
 
 #ifndef UART_C
-    #include "uart.c"
+    #include "./uart/uart.h"
 #endif
+
+#include "../tools/utils.h"
+
 
 
 void command_echo(const char *s) {

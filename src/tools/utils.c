@@ -1,5 +1,9 @@
 #define TOOLS_UTILS
 
+// Define standard types manually
+typedef unsigned long size_t;
+#define NULL ((void *)0)
+
 int strcmp(const char *s1, const char *s2) {
     while (*s1 && (*s1 == *s2)) {
         s1++;

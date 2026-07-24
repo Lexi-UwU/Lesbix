@@ -10,18 +10,20 @@
 
 
 #ifndef FILESYSTEM_MANAGER
-    #include "../file/filesystem.c"
+    #include "../file/filesystem.h"
 #endif
 
 
 #ifndef UART_C
-    #include "uart.c"
+    #include "../uart/uart.h"
 #endif
 
 #ifndef HVM_CORE
-    #include "../hazelut/hazlenut_vm.c"
+    #include "../hazelnut/hazelnut_vm.h"
 #endif
 
+
+#include "../tools/utils.h"
 
 
 
