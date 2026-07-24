@@ -13,8 +13,11 @@ void handle_cli(){
     char received = read_uart0();
     if (received == '\r' || received == '\n'){
 
+#if defined(__arm__) || defined(__aarch64__)
+
         send_uart0('\n');
         send_uart0('\r');
+#endif
         line_buffer[command_buffer_index] = '\0';
         handle_command(line_buffer);
 
@@ -32,6 +35,8 @@ void handle_cli(){
     else{
         line_buffer[command_buffer_index] = received; // Store character
         command_buffer_index++;
+#if defined(__arm__) || defined(__aarch64__)
         send_uart0(received); // Echo the character back
+#endif
     }
 }
