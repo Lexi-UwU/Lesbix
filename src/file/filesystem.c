@@ -28,7 +28,8 @@ char* FILESYSTEM_RUN_CHAR(const char *command,const char *path, const char *data
     return EXAMPLE_DRIVER_RUN(command,path,data);
 #else
 #ifdef LESBIX_LINUX_FILE_DRIVER_H
-    return LINUX_FILE_DRIVER_RUN(command,path,data);
+    DriverResponse resp = LINUX_FILE_DRIVER_RUN(command, path, data);
+    return resp.data;
 #endif
     #endif
 

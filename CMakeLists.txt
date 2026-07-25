@@ -84,5 +84,6 @@ else()
     add_executable(Lesbix ${ALL_FILES}
             src/graphics/graphics.c
             src/file/drivers/linux_file_driver.c
-            src/file/drivers/linux_file_driver.h)
+            src/file/drivers/linux_file_driver.h
+            src/file/driver_response.h)
 endif()

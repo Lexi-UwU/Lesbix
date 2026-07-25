@@ -5,8 +5,10 @@
 #ifndef LESBIX_LINUX_FILE_DRIVER_H
 #define LESBIX_LINUX_FILE_DRIVER_H
 
-char* LINUX_FILE_DRIVER_FOLDER_READ(const char *path);
-char* LINUX_FILE_DRIVER_FILE_READ(const char *path);
-char* LINUX_FILE_DRIVER_RUN(const char *command, const char *path, const char *data);
+#include "../driver_response.h"
+
+DriverResponse LINUX_FILE_DRIVER_FOLDER_READ(const char *path);
+DriverResponse LINUX_FILE_DRIVER_FILE_READ(const char *path);
+DriverResponse LINUX_FILE_DRIVER_RUN(const char *command, const char *path, const char *data);
 
 #endif //LESBIX_LINUX_FILE_DRIVER_H
