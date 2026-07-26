@@ -7,6 +7,8 @@
 #if defined(__arm__) || defined(__aarch64__)
 
 #else
+#include <unistd.h>
+#include <termios.h>
 #include <stdio.h>
 #endif
 
@@ -56,12 +58,38 @@ char read_uart0(void) {
     // 2. Read the received data from the Data Register
     return (char)(*UART0DR);
 #else
+    // Host fallback: Configure terminal for non-canonical (raw) input
+    struct termios oldt, newt;
+    char c;
+
+    tcgetattr(STDIN_FILENO, &oldt);
+    newt = oldt;
+
+    // Disable canonical mode (line buffering) and local echo
+    newt.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+
+    c = getchar();
+
+    // Restore original terminal settings
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+
+    if (c == EOF) {
+        return '\0';
+    }
+    //send_uart0(c);
+    //send_uart0('\r');
+    return c;
+
+    /*
     // Host fallback (e.g., standard input for testing on x86)
     int c = getchar();
     if (c == EOF) {
         return '\0';
     }
     return (char)c;
+
+    */
 #endif
 }
 
