@@ -148,8 +148,15 @@ void *malloc(size_t size) {
     return ptr;
 }
 
+
+#include <stdarg.h>
+
+#include <stdio.h>
+
 #else
 
 #include <string.h>
 
 #endif
+
+#include <stdio.h>

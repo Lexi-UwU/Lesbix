@@ -87,5 +87,6 @@ else()
             src/file/drivers/linux_file_driver.h
             src/file/driver_response.h
             src/file/error_message.c
-            src/file/error_message.h)
+            src/file/error_message.h
+            src/hazelnut/hazelnut_objects.h)
 endif()
