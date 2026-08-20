@@ -6,14 +6,18 @@
 #define LESBIX_FILESYSTEM_H
 #include <stddef.h>
 
+#include "driver_response.h"
+
 
 // Global variables
 extern char *FILESYSTEM_CURRENT_WORKING_DIRECTORY;
 
 // Function declarations
 char *FILESYSTEM_GET_FILES(const char *path);
-char *FILESYSTEM_GET_FILE(const char *path);
-char *FILESYSTEM_GET_FILE_BYTES(const char *path);
+DriverResponse FILESYSTEM_GET_FILE(const char *path);
+char *FILESYSTEM_GET_FILE_CHAR(const char *path);
+int *FILESYSTEM_GET_FILE_INT(const char *path);
+
 int FILESYSTEM_SET_DIRECTORY(char *path);
 char *FILESYSTEM_MERGE_PATHS(const char *path1, const char *path2);
 

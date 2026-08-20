@@ -20,7 +20,9 @@
 #include <string.h>
 #include <dirent.h>
 
-// This driver creates a small hardcoded read only memory format, this should only be used as an example for how the interface works
+#include "../error_message.h"
+
+
 
 // Return codes (first line):
 // 001 SUCCESS
@@ -33,15 +35,7 @@
 char *LINUX_FILESYSTEM_BASE_PATH = "./filesystem";
 
 // Helper function to create error responses easily
-static DriverResponse create_error_response(const char *err_msg) {
-    DriverResponse resp;
-    resp.size = strlen(err_msg);
-    resp.data = malloc(resp.size + 1);
-    if (resp.data) {
-        strcpy(resp.data, err_msg);
-    }
-    return resp;
-}
+
 
 DriverResponse LINUX_FILE_DRIVER_FOLDER_READ(const char *path) {
     if (path == NULL || path[0] == '\0') {
@@ -53,14 +47,14 @@ DriverResponse LINUX_FILE_DRIVER_FOLDER_READ(const char *path) {
 
     DIR *dir = opendir(full_path);
     if (!dir) {
-        return create_error_response("010\nError: Folder not found or cannot be opened");
+        return FILESYSTEM_CREATE_ERROR_RESPONSE("010\nError: Folder not found or cannot be opened", 10);
     }
 
     size_t buffer_size = 4096;
     char *buffer = malloc(buffer_size);
     if (!buffer) {
         closedir(dir);
-        return create_error_response("010\nError: Memory allocation failed");
+        return FILESYSTEM_CREATE_ERROR_RESPONSE("010\nError: Memory allocation failed", 10);
     }
 
     strcpy(buffer, "001\n");
@@ -79,7 +73,7 @@ DriverResponse LINUX_FILE_DRIVER_FOLDER_READ(const char *path) {
             if (!new_buffer) {
                 free(buffer);
                 closedir(dir);
-                return create_error_response("010\nError: Memory reallocation failed");
+                return FILESYSTEM_CREATE_ERROR_RESPONSE("010\nError: Memory reallocation failed", 10);
             }
             buffer = new_buffer;
         }
@@ -98,73 +92,82 @@ DriverResponse LINUX_FILE_DRIVER_FOLDER_READ(const char *path) {
     closedir(dir);
 
     DriverResponse resp;
-    resp.data = buffer;
+    resp.data_char = buffer;
     resp.size = current_len;
     return resp;
 }
 
 DriverResponse LINUX_FILE_DRIVER_FILE_READ(const char *path) {
     if (path == NULL || path[0] == '\0') {
-        return create_error_response("010\nError: Invalid path");
+        return FILESYSTEM_CREATE_ERROR_RESPONSE("010\nError: Invalid path", 10);
     }
 
     char full_path[512];
     snprintf(full_path, sizeof(full_path), "%s%s", LINUX_FILESYSTEM_BASE_PATH, path);
 
-    // Open file in binary read mode
     FILE *file = fopen(full_path, "rb");
     if (!file) {
-        return create_error_response("010\nError: File not found or cannot be opened");
+        return FILESYSTEM_CREATE_ERROR_RESPONSE("010\nError: File not found or cannot be opened", 10);
     }
 
-    // Determine the size of the file
     fseek(file, 0, SEEK_END);
     long file_size = ftell(file);
     fseek(file, 0, SEEK_SET);
 
     if (file_size < 0) {
         fclose(file);
-        return create_error_response("010\nError: Failed to measure file size");
+        return FILESYSTEM_CREATE_ERROR_RESPONSE("010\nError: Failed to measure file size", 10);
     }
 
-    // Allocate buffer: status code ("001\n" is 4 bytes) + binary file contents
-    size_t status_prefix_len = 4;
-    size_t buffer_size = status_prefix_len + file_size;
-    char *buffer = malloc(buffer_size);
+    // Pad file_size to ensure the sentinel location is aligned to sizeof(int)
+    size_t aligned_payload_size = (file_size + sizeof(int) - 1) & ~(sizeof(int) - 1);
+
+    // Allocate space for file payload + 1 int sentinel (-1) + 1 extra byte for string '\0'
+    size_t total_alloc_size = aligned_payload_size + sizeof(int) + 1;
+
+    char *buffer = malloc(total_alloc_size);
     if (!buffer) {
         fclose(file);
-        return create_error_response("010\nError: Memory allocation failed");
+        return FILESYSTEM_CREATE_ERROR_RESPONSE("010\nError: Memory allocation failed", 10);
     }
 
-    // Copy success status code safely using memcpy
-    memcpy(buffer, "001\n", status_prefix_len);
+    // Zero out padding bytes
+    memset(buffer, 0, total_alloc_size);
 
-    // Read the binary file contents directly after the status code prefix
-    size_t read_bytes = fread(buffer + status_prefix_len, 1, file_size, file);
-    if (read_bytes != (size_t)file_size) {
-        free(buffer);
-        fclose(file);
-        return create_error_response("010\nError: Failed to read file contents");
-    }
-
+    // Read raw file content directly starting at offset 0
+    size_t read_bytes = fread(buffer, 1, file_size, file);
     fclose(file);
 
+    if (read_bytes != (size_t)file_size) {
+        free(buffer);
+        return FILESYSTEM_CREATE_ERROR_RESPONSE("010\nError: Failed to read file contents", 10);
+    }
+
+    // 1. Text terminator (ensures safe string operations if treating as text)
+    buffer[file_size] = '\0';
+
+    // 2. Binary sentinel (ensures hazlenut_run_file stops safely when treating as binary)
+    int sentinel = -1;
+    memcpy(buffer + aligned_payload_size, &sentinel, sizeof(int));
+
     DriverResponse resp;
-    resp.data = buffer;
-    resp.size = buffer_size;
+    resp.data_char = buffer;                        // Clean string reading (starts at byte 0)
+    resp.data_int  = (int *)(void *)buffer;        // Aligned integer array (starts at byte 0)
+    resp.size      = file_size;
+    resp.response_code = 1;
     return resp;
 }
 
 DriverResponse LINUX_FILE_DRIVER_RUN(const char *command, const char *path, const char *data) {
-    if (command == FILESYSTEM_CONSTS_FOLDER_READ) {
+    if (strcmp(command, FILESYSTEM_CONSTS_FOLDER_READ) == 0) {
         return LINUX_FILE_DRIVER_FOLDER_READ(path);
-    } else if (command == FILESYSTEM_CONSTS_FILE_READ) {
+    } else if (strcmp(command, FILESYSTEM_CONSTS_FILE_READ) == 0) {
         return LINUX_FILE_DRIVER_FILE_READ(path);
-    } else if (command == FILESYSTEM_CONSTS_FILE_WRITE) {
+    } else if (strcmp(command, FILESYSTEM_CONSTS_FILE_WRITE) == 0) {
         // Handle file write implementation here
     } else {
-        return create_error_response("011\n INVALID COMMAND");
+        return FILESYSTEM_CREATE_ERROR_RESPONSE("011\n INVALID COMMAND",10);
     }
 
-    return create_error_response("012\n how..... how did you even get here?");
+    return FILESYSTEM_CREATE_ERROR_RESPONSE("012\n how..... how did you even get here?",10);
 }

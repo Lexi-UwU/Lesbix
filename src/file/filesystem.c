@@ -29,9 +29,34 @@ char* FILESYSTEM_RUN_CHAR(const char *command,const char *path, const char *data
 #else
 #ifdef LESBIX_LINUX_FILE_DRIVER_H
     DriverResponse resp = LINUX_FILE_DRIVER_RUN(command, path, data);
-    return resp.data;
+    return resp.data_char;
 #endif
     #endif
+
+}
+
+int* FILESYSTEM_RUN_INT(const char *command,const char *path, const char *data) {
+#if defined(__arm__) || defined(__aarch64__)
+    return EXAMPLE_DRIVER_RUN(command,path,data);
+#else
+#ifdef LESBIX_LINUX_FILE_DRIVER_H
+    DriverResponse resp = LINUX_FILE_DRIVER_RUN(command, path, data);
+    return resp.data_int;
+#endif
+#endif
+
+}
+
+
+DriverResponse FILESYSTEM_RUN(const char *command,const char *path, const char *data) {
+#if defined(__arm__) || defined(__aarch64__)
+    return EXAMPLE_DRIVER_RUN(command,path,data);
+#else
+#ifdef LESBIX_LINUX_FILE_DRIVER_H
+    DriverResponse resp = LINUX_FILE_DRIVER_RUN(command, path, data);
+    return resp;
+#endif
+#endif
 
 }
 
@@ -46,7 +71,15 @@ char *FILESYSTEM_GET_FILES(const char *path){
 
 
 
-char *FILESYSTEM_GET_FILE(const char *path){
+DriverResponse FILESYSTEM_GET_FILE(const char *path){
+    //Find driver and send appropriate command
+
+
+    return FILESYSTEM_RUN(FILESYSTEM_CONSTS_FILE_READ,path, "");
+
+}
+
+char *FILESYSTEM_GET_FILE_CHAR(const char *path){
     //Find driver and send appropriate command
 
 
@@ -55,11 +88,11 @@ char *FILESYSTEM_GET_FILE(const char *path){
 }
 
 
-char *FILESYSTEM_GET_FILE_BYTES(const char *path){
+int *FILESYSTEM_GET_FILE_INT(const char *path){
     //Find driver and send appropriate command
 
 
-    return FILESYSTEM_RUN_CHAR(FILESYSTEM_CONSTS_FILE_READ_BYTES,path, "");
+    return FILESYSTEM_RUN_INT(FILESYSTEM_CONSTS_FILE_READ_BYTES,path, "");
 
 }
 

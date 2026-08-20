@@ -9,8 +9,10 @@
 #include <stddef.h>
 
 typedef struct {
-    char *data;
+    char *data_char;
+    int *data_int;
     size_t size;
+    int response_code;
 } DriverResponse;
 
 #endif //LESBIX_DRIVERRESPONSE_H

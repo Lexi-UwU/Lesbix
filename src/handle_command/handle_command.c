@@ -8,6 +8,8 @@
     #include "../tools/utils.h"
 #endif
 
+#include "../file/driver_response.h"
+
 
 
 
@@ -20,6 +22,7 @@
 #include "../commands/mkdir.h"
 #include "../commands/cat.h"
 #include "../commands/pwd.h"
+#include "../commands/hazelnut.h"
 
 
 void handle_command(const char *s) {
@@ -55,6 +58,8 @@ void handle_command(const char *s) {
         command_cat(s);
     }else if (strcmp(cmd, "pwd") == 0){
         command_pwd();
+    }else if (strcmp(cmd, "hazelnut") == 0){
+        command_hazelnut(s);
     }
 
     else{

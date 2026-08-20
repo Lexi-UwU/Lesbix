@@ -28,15 +28,35 @@
 
 
 
+
+
 //More functionality needs to be added in the future
 //Run Command
-void command_hazelnut(const char *s){
+void command_hazelnut(const char *s) {
+    if (s == NULL || s[0] == '\0') {
+        print_uart0("Error: No file specified.\n");
+        return;
+    }
 
+    char *full_path = FILESYSTEM_MERGE_PATHS(FILESYSTEM_CURRENT_WORKING_DIRECTORY, s);
+    if (full_path == NULL) {
+        print_uart0("Error: Path resolution failed.\n");
+        return;
+    }
 
-    //Get file from filesystem
-    char *file =  FILESYSTEM_GET_FILE(FILESYSTEM_MERGE_PATHS(FILESYSTEM_CURRENT_WORKING_DIRECTORY,s));
+    DriverResponse file = FILESYSTEM_GET_FILE(full_path);
 
-    hazlenut_run_file(file);
+    // FIX: Check for failure BEFORE printing and BEFORE calling the VM
+    if (file.data_int == NULL) {
+        if (file.data_char) {
+            print_uart0(file.data_char); // Print the driver's error message
+        } else {
+            print_uart0("Error: File not found or failed to load.\n\r");
+        }
+        return; // STOP HERE. Do not call hazlenut_run_file.
+    }
 
+    // Now it's safe to run
+    hazlenut_run_file(file.data_int);
 }
 

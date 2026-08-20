@@ -9,6 +9,8 @@
 #include <stddef.h>
 #include <string.h>
 
+
+
 int strcmp(const char *s1, const char *s2);
 size_t strspn(const char *s, const char *accept);
 char *strpbrk(const char *s, const char *accept);

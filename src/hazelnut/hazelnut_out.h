@@ -7,6 +7,8 @@
 
 void hvm_print(const char *s);
 
+void hvm_print_int(const int *s);
+
 #endif //LESBIX_HAZELNUT_OUT_H
 
 

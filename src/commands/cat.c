@@ -31,7 +31,7 @@ void command_cat(const char *s){
         if (arg != NULL) {
             // Send the parsed argument to UART
             //print_uart0(arg);
-            print_uart0(FILESYSTEM_GET_FILE(FILESYSTEM_MERGE_PATHS(FILESYSTEM_CURRENT_WORKING_DIRECTORY, arg)));
+            print_uart0(FILESYSTEM_GET_FILE(FILESYSTEM_MERGE_PATHS(FILESYSTEM_CURRENT_WORKING_DIRECTORY, arg)).data_char);
         }
         send_uart0('\n');
     }

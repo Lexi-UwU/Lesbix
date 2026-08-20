@@ -85,5 +85,7 @@ else()
             src/graphics/graphics.c
             src/file/drivers/linux_file_driver.c
             src/file/drivers/linux_file_driver.h
-            src/file/driver_response.h)
+            src/file/driver_response.h
+            src/file/error_message.c
+            src/file/error_message.h)
 endif()
