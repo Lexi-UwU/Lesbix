@@ -6,5 +6,6 @@
 #define LESBIX_HANDLE_COMMAND_H
 
 void handle_command(const char *s);
+int handle_command_init();
 
 #endif //LESBIX_HANDLE_COMMAND_H

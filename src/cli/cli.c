@@ -9,6 +9,11 @@
 char line_buffer[MAX_BUF];
 int command_buffer_index = 0;
 
+int cli_init(void) {
+   return handle_command_init();
+
+}
+
 void handle_cli(){
     char received = read_uart0();
     if (received == '\r' || received == '\n'){

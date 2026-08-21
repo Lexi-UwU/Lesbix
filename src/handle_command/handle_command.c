@@ -24,7 +24,9 @@
 #include "../commands/pwd.h"
 #include "../commands/hazelnut.h"
 
-
+int handle_command_init() {
+    return command_hazelnut_init();
+}
 void handle_command(const char *s) {
 
     char buffer[128];

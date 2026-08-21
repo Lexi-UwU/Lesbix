@@ -27,6 +27,13 @@
 #include "hazelnut/hazelnut_out.h"
 
 
+//hazelnut output.hazelnut
+
+int command_hazelnut_init() {
+    return hazelnut_vm_init();
+}
+
+
 //More functionality needs to be added in the future
 //Run Command
 void command_hazelnut(const char *s) {

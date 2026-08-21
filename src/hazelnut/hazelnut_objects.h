@@ -6,8 +6,8 @@
 #define LESBIX_HAZELNUT_OBJECTS_H
 
 struct hazelnut_script_header_object {
-    int *key;
-    int *value;
+    char key[8];
+    unsigned char value[8];
 };
 
 struct hazelnut_script_header {
@@ -21,6 +21,8 @@ struct hazelnut_script_parse_internal_counter {
     int passed_headersize;
     int header_index;
     int header_progress;
+    int instruction_index;
+    int instruction_progress;
 };
 
 struct hazelnut_script_object {
@@ -36,6 +38,7 @@ struct hazelnut_script {
     struct hazelnut_script_header header;
     struct hazelnut_script_object *objects;
     struct hazelnut_script_parse_internal_counter internal_counter;;
+    int program_counter;
 };
 
 

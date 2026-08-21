@@ -6,5 +6,6 @@
 #define LESBIX_HAZELNUT_H
 
 void command_hazelnut(const char *s);
+int command_hazelnut_init();
 
 #endif //LESBIX_HAZELNUT_H
