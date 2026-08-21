@@ -15,6 +15,13 @@ struct hazelnut_script_header {
     struct hazelnut_script_header_object *objects;
 };
 
+struct hazelnut_memory {
+
+    int memory_size;
+    int *memory;
+};
+
+
 struct hazelnut_script_parse_internal_counter {
     int byte_count;
     int passed_identifier;
@@ -37,7 +44,8 @@ struct hazelnut_script_object {
 struct hazelnut_script {
     struct hazelnut_script_header header;
     struct hazelnut_script_object *objects;
-    struct hazelnut_script_parse_internal_counter internal_counter;;
+    struct hazelnut_script_parse_internal_counter internal_counter;
+    struct hazelnut_memory memory;
     int program_counter;
 };
 

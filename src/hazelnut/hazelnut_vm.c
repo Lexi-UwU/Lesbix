@@ -46,6 +46,28 @@ void add_hazelnut_script(struct hazelnut_script script) {
     hazelnut_script_count++;
 }
 
+void hazelnut_set_memory(struct hazelnut_script *script,int address, int value) {
+    if (address >= script->memory.memory_size) {
+        int new_size = hazelnut_script_size * 2;
+        int *temp = realloc(
+            hazelnut_script_array,
+            new_size * sizeof(int)
+        );
+
+        // Return without corrupting hazelnut_script_size if memory fails
+        if (!temp) return;
+
+
+        script->memory.memory_size = new_size;
+        script->memory.memory = temp;
+    }
+
+    script->memory.memory[address] = value;
+
+
+}
+
+
 void hazelnut_proccess_byte(unsigned int byte, struct hazelnut_script *script) {
     unsigned int count = script->internal_counter.byte_count;
 
@@ -197,6 +219,10 @@ struct hazelnut_script_object *get_instruction_by_address(struct hazelnut_script
     return NULL; // Address not found
 }
 
+int hazelnut_get_memory(struct hazelnut_script *script, int address) {
+    return script->memory.memory[address];
+}
+
 int hazelnut_tick_script(struct hazelnut_script *script) {
     if (!script) return 1;
 
@@ -217,16 +243,39 @@ int hazelnut_tick_script(struct hazelnut_script *script) {
         (char)(instruction_object->opcode & 0xFF),
         '\0'
     };
-    hvm_print("\n\rCURRENT OPCODE: ");
-    hvm_print(opcode_str);
+    //hvm_print("\n\rCURRENT OPCODE: ");
+    //hvm_print(opcode_str);
 
-    hvm_print("\n\rCURRENT PARAM1: \n\r");
-    hvm_print_int(&instruction_object->operand1);
-    hvm_print("\n\r");
+    if (strcmp(opcode_str, "st") == 0) {
+        //STORE VALUE IN MEMORY
+        //hvm_print("\n\r");
+        //hvm_print("Storing value ");
+        //hvm_print_int(&instruction_object->operand2);
+        //hvm_print("At location: ");
+        //hvm_print_int(&instruction_object->operand1);
+        //hvm_print("\n\r");
+        hazelnut_set_memory(script, instruction_object->operand1, instruction_object->operand2);
+    }
+    if (strcmp(opcode_str, "pr") == 0) {
+        //hvm_print("\n\r");
+        //hvm_print("Printing value at");
+        //hvm_print_int(&instruction_object->operand1);
+        int data = hazelnut_get_memory(script,instruction_object->operand1);
+        hvm_print_int(&data);
+        hvm_print("\n\r");
+        //hazelnut_get_memory(script, instruction_object);
+    }
 
-    hvm_print("\n\rCURRENT PARAM2: \n\r");
-    hvm_print_int(&instruction_object->operand2);
-    hvm_print("\n\r");
+    //hvm_print("\r");
+
+    //hvm_print("\n\rEnd of instruction \n\r");
+    //hvm_print("\n\rCURRENT PARAM1: \n\r");
+    //hvm_print_int(&instruction_object->operand1);
+    //hvm_print("\n\r");
+
+    //hvm_print("\n\rCURRENT PARAM2: \n\r");
+    //hvm_print_int(&instruction_object->operand2);
+    //hvm_print("\n\r");
 
     script->program_counter++;
 
@@ -254,7 +303,7 @@ void hazlenut_run_file(int *s){
         // Process individual byte (e.g., format and print)
         char buf[8];
         snprintf(buf, sizeof(buf), "0x%02X ", current_byte);
-        hvm_print(buf);
+        //hvm_print(buf);
         hazelnut_proccess_byte(current_byte,&hazelnut_script);
 
         byte_ptr++; // Advance to the next 8-bit byte
