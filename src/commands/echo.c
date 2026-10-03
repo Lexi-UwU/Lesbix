@@ -24,7 +24,7 @@ void command_echo(const char *s) {
     cmd = strtok(buffer, " ");
 
     // 2. Check if the command is "echo"
-    if (cmd != NULL && strcmp(cmd, "echo") == 0) {
+    if (cmd != NULL && strcmp(cmd, "basic") == 0) {
         // 3. Get the rest of the string as the argument
         arg = strtok(NULL, "");
 

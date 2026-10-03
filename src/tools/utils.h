@@ -21,5 +21,5 @@ size_t strlen(const char *s);
 char *strcpy(char *dest, const char *src);
 void *memcpy(void *dest, const void *src, size_t n);
 void *malloc(size_t size);
-
+int atoi(const char *str);
 #endif //LESBIX_UTILS_H

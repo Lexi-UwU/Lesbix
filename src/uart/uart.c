@@ -18,11 +18,17 @@
 
 #else
 
-//This is the data transfer.
-volatile unsigned int * const UART0DR = (unsigned int *)0x101f1000;
 
-//This are the flags for the current state of the hardware
-volatile unsigned int * const UART0FR = (unsigned int *)0x101f1018;
+
+
+    #if defined(__arm__)
+
+        //This is the data transfer.
+        volatile unsigned int * const UART0DR = (unsigned int *)0x101f1000;
+
+        //This are the flags for the current state of the hardware
+        volatile unsigned int * const UART0FR = (unsigned int *)0x101f1018;
+    #endif
 
 #endif
 

@@ -165,6 +165,24 @@ void *malloc(size_t size) {
 }
 
 
+int atoi(const char *str) {
+    int result = 0;
+
+    // Skip leading whitespace
+    while (*str == ' ' || *str == '\t') {
+        str++;
+    }
+
+    // Convert digit characters to integer
+    while (*str >= '0' && *str <= '9') {
+        result = (result * 10) + (*str - '0');
+        str++;
+    }
+
+    return result;
+}
+
+
 #include <stdarg.h>
 
 //#include <stdio.h>

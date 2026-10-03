@@ -16,6 +16,7 @@ set(CORE_C_SRCS
     src/commands/help.c
     src/commands/ls.c
     src/commands/mkdir.c
+    src/commands/basic.c
     src/commands/pwd.c
     src/file/drivers/example_driver.c
     src/file/consts.c
@@ -33,6 +34,8 @@ set(CORE_C_SRCS
     src/handle_command/handle_command.c
     src/main.c
     src/uart/uart.c
+
+    src/basic/basic.c
 )
 
 set(HEADERS
@@ -52,6 +55,7 @@ set(HEADERS
     src/commands/ls.h
     src/commands/mkdir.h
     src/commands/pwd.h
+    src/commands/basic.h
     src/cli/cli.h
     src/handle_command/handle_command.h
     src/hazelnut/hazelnut_vm.h
@@ -60,6 +64,8 @@ set(HEADERS
     src/graphics/vga/initialise.h
     src/graphics/vga/vga.h
     src/graphics/vga/vgatext.h
+
+    src/basic/basic.h
 )
 
 # ------------------------------------------------------------------------------

@@ -22,6 +22,7 @@
 #include "../commands/mkdir.h"
 #include "../commands/cat.h"
 #include "../commands/pwd.h"
+#include "../commands/basic.h"
 
 #ifndef __CC65__
     #include "../commands/hazelnut.h"
@@ -67,14 +68,17 @@ void handle_command(const char *s) {
         command_cat(s);
     }else if (strcmp(cmd, "pwd") == 0){
         command_pwd();
+    }else if (strcmp(cmd, "basic") == 0){
+        command_basic(s);
 
-
+    }
     #ifndef __CC65__
 
-    }else if (strcmp(cmd, "hazelnut") == 0){
+    else if (strcmp(cmd, "hazelnut") == 0){
         command_hazelnut(s);
+    }
     #endif
-        }
+
 
     else{
         //TODO: Handle running binary files located in the filesystem
