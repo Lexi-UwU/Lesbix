@@ -4,6 +4,6 @@
 
 void LESBIX_BASIC_GRAPHICS_SET_MODE(int mode);
 
-
+void LESBIX_BASIC_GRAPHICS_SET_TILE(int x, int y, int tile);
 
 #endif

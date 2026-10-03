@@ -6,7 +6,7 @@
 
 #include "../tools/utils.h"
 
-#include ""
+#include "basic_graphics.h"
 
 #define LESBIX_BASIC_MAX_LINES 64
 
@@ -136,7 +136,7 @@ void LESBIX_BASIC_RUN(){
     int return_code;
 
 
-
+    LESBIX_BASIC_GRAPHICS_SET_TILE(4,4,'2');
 
 
     current_line = 0;

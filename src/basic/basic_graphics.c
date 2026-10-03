@@ -2,8 +2,9 @@
 
 
 
-#ifdef __CC65__
-#include "../graphics/graphics.c"
+
+#include "../graphics/graphics.h"
+
 
 static int BASIC_GRAPHICS_MODE = 0;
 
@@ -20,7 +21,7 @@ void LESBIX_BASIC_GRAPHICS_SET_MODE(int mode){
 
 void LESBIX_BASIC_GRAPHICS_SET_TILE(int x, int y, int tile){
 
-    BASIC_GRAPHICS_MODE = mode;
+    GRAPHICS_PUT_TILE(x,y,tile);
 
 
 }

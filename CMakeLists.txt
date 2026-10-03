@@ -36,6 +36,13 @@ set(CORE_C_SRCS
     src/uart/uart.c
 
     src/basic/basic.c
+    src/basic/basic_graphics.c
+
+    src/graphics/graphics.c
+
+
+
+
 )
 
 set(HEADERS
@@ -66,6 +73,10 @@ set(HEADERS
     src/graphics/vga/vgatext.h
 
     src/basic/basic.h
+    src/basic/basic_graphics.h
+
+    src/graphics/graphics.h
+
 )
 
 # ------------------------------------------------------------------------------

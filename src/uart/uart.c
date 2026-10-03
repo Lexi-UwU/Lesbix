@@ -15,6 +15,7 @@
 
 #ifdef __CC65__
 #include "acia.c"
+#include "screen.c"
 
 #else
 
@@ -80,6 +81,8 @@ void init_uart0(){
     init_acia();
 
     acia_test();
+
+    screen_init();
 
     #endif
 

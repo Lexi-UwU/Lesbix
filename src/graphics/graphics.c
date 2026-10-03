@@ -24,5 +24,13 @@
 
 
 void GRAPHICS_PUT_TILE(int x, int y, int tile){
-    vgc_put_tile(x,y,tile);
+    #ifdef __CC65__
+        vgc_put_tile(x,y,tile);
+    #endif
+}
+
+void GRAPHICS_INIT(){
+    #ifdef __CC65__
+        vgc_output();
+    #endif
 }

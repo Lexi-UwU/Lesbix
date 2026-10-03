@@ -29,6 +29,7 @@ void delay(int count) {
 }
 
 #include "./commands/help.h"
+#include "./commands/basic.h"
 
 
 int main(void) {
@@ -59,6 +60,9 @@ int main(void) {
     command_help();
     print_uart0("\n");
     print_uart0(">");
+
+
+    //command_basic("basic text.basic");
 
 
 
