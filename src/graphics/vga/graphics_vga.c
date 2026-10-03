@@ -10,17 +10,21 @@ void draw_pixel(int x, int y, unsigned short color) {
 
 
 void clear_screen(unsigned short color) {
+
+    int i;
+
     unsigned short *fb = (unsigned short *)FRAMEBUFFER_BASE;
     // We use a VERY small number here.
     // If this doesn't crash, we can slowly increase it.
-    for (int i = 0; i < 13; i++) {
+    for (i = 0; i < 13; i++) {
         fb[i] = color;
     }
 }
 
 
 void draw_diagonal() {
-    for (int i = 0; i < 400; i++) {
+    int i;
+    for (i = 0; i < 400; i++) {
         draw_pixel(i, i, 0xFFFF);
     }
 }

@@ -13,8 +13,11 @@
 
 #if defined(__arm__) || defined(__aarch64__)
 #else
-    #include "drivers/linux_file_driver.h"
 
+    #ifndef __CC65__
+        #include "drivers/linux_file_driver.h"
+
+    #endif
 #endif
 
 #include "drivers/example_driver.h"

@@ -31,11 +31,13 @@ void handle_command(const char *s) {
 
     char buffer[128];
 
+    char *cmd;
+
     strncpy(buffer, s, sizeof(buffer) - 1);
     buffer[sizeof(buffer) - 1] = '\0';
 
     // 2. Tokenize the COPY, not the original 's'
-    char *cmd = strtok(buffer, " ");
+    *cmd = strtok(buffer, " ");
 
     if (cmd == NULL) return; // Empty input
 

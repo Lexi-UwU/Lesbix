@@ -22,7 +22,8 @@ int LESBIX_RUNNING = 1;
 
 
 void delay(int count) {
-    for (int i = 0; i < count; i++) {
+    int i;
+    for (i = 0; i < count; i++) {
         __asm__("nop"); // Does nothing, just burns cycles
     }
 }
@@ -47,6 +48,10 @@ int main(void) {
 
     LESBIX_RUNNING = 1;
 
+    init_uart0();
+
+    send_uart0(0x0c);
+
 
 
     print_uart0("Welcome to Lesbix\n\0");
@@ -68,4 +73,13 @@ int main(void) {
     halt();
     return 0;
 
+}
+
+
+void IRQ(void) {
+    // Handle interrupt
+}
+
+void NMI(void) {
+    // Handle NMI
 }

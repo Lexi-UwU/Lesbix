@@ -1,6 +1,6 @@
 #define TOOLS_UTILS
 
-#if defined(__arm__) || defined(__aarch64__)
+#if defined(__arm__) || defined(__aarch64__) || defined(__CC65__)
 
 // Define standard types manually
 typedef unsigned long size_t;
@@ -21,10 +21,12 @@ int strcmp(const char *s1, const char *s2) {
 
 // Helper: Find length of the initial segment consisting only of accepted characters
  size_t strspn(const char *str, const char *delim) {
+    int found;
+    const char *d;
     size_t count = 0;
     while (str[count] != '\0') {
-        int found = 0;
-        for (const char *d = delim; *d != '\0'; d++) {
+        found = 0;
+        for (d = delim; *d != '\0'; d++) {
             if (str[count] == *d) {
                 found = 1;
                 break;
@@ -38,8 +40,9 @@ int strcmp(const char *s1, const char *s2) {
 
 // Helper: Locate first occurrence of any character from delim in str
  char *strpbrk(const char *str, const char *delim) {
+     const char *d;
     while (*str != '\0') {
-        for (const char *d = delim; *d != '\0'; d++) {
+        for (d = delim; *d != '\0'; d++) {
             if (*str == *d) return (char *)str;
         }
         str++;
@@ -140,10 +143,10 @@ void *memcpy(void *dest, const void *src, size_t n) {
 
 // Simplified bump allocator (unsafe for complex systems)
 extern char _end; // Defined in your linker script at the end of .bss
-static void *heap_ptr = &_end;
+static char *heap_ptr = &_end;
 
 void *malloc(size_t size) {
-    void *ptr = heap_ptr;
+    void *ptr = (void *)heap_ptr;
     heap_ptr += size; // Simply "bump" the pointer forward
     return ptr;
 }
@@ -158,5 +161,8 @@ void *malloc(size_t size) {
 #include <string.h>
 
 #endif
+<<<<<<< HEAD
 
 #include <stdio.h>
+=======
+>>>>>>> 342b116 (Made it compile for the cat65)
