@@ -1,0 +1,9 @@
+
+#ifndef LESBIX_BASIC_GRAPHICS
+#define LESBIX_BASIC_GRAPHICS
+
+void LESBIX_BASIC_GRAPHICS_SET_MODE(int mode);
+
+
+
+#endif

@@ -97,16 +97,20 @@ if(TARGET_CAT65)
     set(ALL_6502_OBJS ${CRT0_OBJ})
 
     # Rule: Process each C source through cc65 -> ca65 -> .o
+    # Rule: Process each C source through cc65 -> ca65 -> .o
     foreach(c_file ${CORE_C_SRCS})
-        get_filename_component(fname ${c_file} NAME_WE)
-        set(asm_out "${CMAKE_CURRENT_BINARY_DIR}/${fname}.s")
-        set(obj_out "${CMAKE_CURRENT_BINARY_DIR}/${fname}.o")
+        # Generate a unique path key by replacing slashes with underscores
+        string(REPLACE "/" "_" fname_unique "${c_file}")
+        string(REPLACE ".c" "" fname_clean "${fname_unique}")
+
+        set(asm_out "${CMAKE_CURRENT_BINARY_DIR}/${fname_clean}.s")
+        set(obj_out "${CMAKE_CURRENT_BINARY_DIR}/${fname_clean}.o")
 
         add_custom_command(
             OUTPUT ${obj_out}
             COMMAND ${CC65_BIN} --cpu 65C02 -O -I ${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAKE_CURRENT_SOURCE_DIR}/${c_file} -o ${asm_out}
             COMMAND ${CA65_BIN} --cpu 65C02 ${asm_out} -o ${obj_out}
-            DEPENDS ${c_file} ${HEADERS}
+            DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${c_file} ${HEADERS}
             COMMENT "Compiling & Assembling (65C02): ${c_file}"
         )
         list(APPEND ALL_6502_OBJS ${obj_out})

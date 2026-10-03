@@ -6,7 +6,9 @@
 
 #include "../tools/utils.h"
 
-#define LESBIX_BASIC_MAX_LINES 128
+#include ""
+
+#define LESBIX_BASIC_MAX_LINES 64
 
 static int current_line = 0;
 
@@ -22,6 +24,10 @@ static char lines[LESBIX_BASIC_MAX_LINES][128];
 // 2: Success (Dont Increment Counter)
 // 3: Halt
 static int LESBIX_BASIC_RUN_LINE(const char *line) {
+
+    const char *p;
+    char buf[2];
+    int target_line;
     //print_uart0(line);
     //print_uart0("\n");
 
@@ -29,16 +35,63 @@ static int LESBIX_BASIC_RUN_LINE(const char *line) {
         return 3;
     }
 
+    else if (strcmp(line, "ENDPROC") == 0) {
+        return 3;
+    }
+
+    else if (strncmp(line, "DEF ", 4) == 0) {
+        return 1;
+    }
+
+
+    // CLS (Clear Screen stub)
+    else if (strcmp(line, "CLS") == 0) {
+        // Call your screen clear UART / display driver routine here
+        return 1;
+    }
+
+    else if (strncmp(line, "MODE ", 5) == 0) {
+        return 1;
+    }
+
+    else if (strncmp(line, "GCOL ", 5) == 0) {
+        return 1;
+    }
+
+    else if (strncmp(line, "MOVE ", 5) == 0) {
+        return 1;
+    }
+
+    //else if (strncmp(line, "PLOT ", 4) == 0) {
+    //    return 1;
+    //}
+
+    else if (strncmp(line, "PROC ", 4) == 0) {
+        return 1;
+    }
+
+    else if (strncmp(line, "IF ", 3) == 0) {
+        return 1;
+    }
+    else if (strchr(line, '=') != NULL) {
+        return 1;
+    }
+
+
+
+
     // Check if command starts with "PRINT "
-    if (strncmp(line, "PRINT ", 6) == 0) {
+    else if (strncmp(line, "PRINT ", 6) == 0) {
         //print_uart0("print");
         const char *start = strchr(line, '"');       // Find first quotation mark
         const char *end = strrchr(line, '"');        // Find last quotation mark
 
 
         // Print characters between the quotes
-        for (const char *p = start + 1; p < end; p++) {
-            char buf[2] = { *p, '\0' };
+        for (p = start + 1; p < end; p++) {
+            //buf[2] = { *p, '\0' };
+            buf[0] = *p;
+            buf[1] = '\0';
             print_uart0(buf);
         }
         print_uart0("\n");
@@ -46,7 +99,7 @@ static int LESBIX_BASIC_RUN_LINE(const char *line) {
         return 1;
     }
 
-    if (strncmp(line, "GOTO ", 5) == 0) {
+    else if (strncmp(line, "GOTO ", 5) == 0) {
         const char *num_str = line + 5;
 
         // Skip any leading whitespace after "GOTO "
@@ -55,7 +108,7 @@ static int LESBIX_BASIC_RUN_LINE(const char *line) {
         }
 
         // Convert line number string to an integer
-        int target_line = atoi(num_str);
+        target_line = atoi(num_str);
 
         if (target_line > 0) {
             // TODO: Execute your jump logic here (e.g., jump_to_line(target_line);)
@@ -65,6 +118,13 @@ static int LESBIX_BASIC_RUN_LINE(const char *line) {
         }
 
         return 2;
+    }
+
+    else {
+        print_uart0("INVALID COMMAND: ");
+        print_uart0(line);
+        print_uart0("\n");
+
     }
 
     return 1;
@@ -170,6 +230,14 @@ static void LESBIX_LOAD_LINE(const char *line){
         ptr++;
     }
 
+
+    if ((ptr[0] == 'R' || ptr[0] == 'r') &&
+        (ptr[1] == 'E' || ptr[1] == 'e') &&
+        (ptr[2] == 'M' || ptr[2] == 'm') &&
+        (ptr[3] == ' ' || ptr[3] == '\t' || ptr[3] == '\r' || ptr[3] == '\n' || ptr[3] == '\0')) {
+        return;
+        }
+
     // Allocate buffer on stack and convert
     //char num_buf[20];
     //int_to_str(line_number, num_buf);
@@ -188,12 +256,13 @@ static void LESBIX_LOAD_LINE(const char *line){
 
 
 void LESBIX_BASIC_LOAD_PROGRAM(const char *path){
+    char *line;
     char *file_contents = FILESYSTEM_GET_FILE(path)->data_char;
 
     if (!file_contents) return;
 
     // Tokenize by carriage return and newline
-    char *line = strtok(file_contents, "\r\n");
+    line = strtok(file_contents, "\r\n");
 
     while (line != NULL) {
         // Process the null-terminated line string directly
