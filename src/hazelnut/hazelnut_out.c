@@ -14,11 +14,20 @@ void hvm_print(const char *s) {
 }
 
 void hvm_print_int(const int *i) {
-    if (i == NULL) return;
 
-    int num = *i;
+    int num;
     char buffer[12]; // Fits 32-bit INT_MIN ("-2147483648\0")
     int idx = 0;
+    int j;
+    int k;
+    char temp;
+
+
+    if (i == NULL) return;
+
+    num = *i;
+
+
 
     // Handle 0 explicitly
     if (num == 0) {
@@ -40,8 +49,8 @@ void hvm_print_int(const int *i) {
     }
 
     // Reverse string in-place
-    for (int j = 0, k = idx - 1; j < k; j++, k--) {
-        char temp = buffer[j];
+    for (j = 0, k = idx - 1; j < k; j++, k--) {
+        temp = buffer[j];
         buffer[j] = buffer[k];
         buffer[k] = temp;
     }

@@ -3,7 +3,20 @@
 #if defined(__arm__) || defined(__aarch64__) || defined(__CC65__)
 
 // Define standard types manually
-typedef unsigned long size_t;
+
+
+#if defined(__CC65__)
+    #ifndef _SIZE_T
+        typedef unsigned int size_t;
+        #define _SIZE_T
+    #endif
+#elif defined(__arm__) || defined(__aarch64__)
+    #ifndef _SIZE_T
+        typedef unsigned long size_t;
+        #define _SIZE_T
+    #endif
+#endif
+
 #define NULL ((void *)0)
 
 int strcmp(const char *s1, const char *s2) {
@@ -154,15 +167,12 @@ void *malloc(size_t size) {
 
 #include <stdarg.h>
 
-#include <stdio.h>
+//#include <stdio.h>
 
 #else
 
-#include <string.h>
+    #include <string.h>
 
 #endif
-<<<<<<< HEAD
 
-#include <stdio.h>
-=======
->>>>>>> 342b116 (Made it compile for the cat65)
+

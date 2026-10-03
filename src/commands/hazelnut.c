@@ -39,49 +39,53 @@ int command_hazelnut_init() {
 void command_hazelnut(const char *s) {
 
     char buffer[64];
+    char *cmd;
+    char *full_path;
+    char *arg;
+    DriverResponse *file;
     // Copy input safely
     strncpy(buffer, s, sizeof(buffer) - 1);
     buffer[sizeof(buffer) - 1] = '\0';
 
     // 1. Tokenize to find the command
-    char *cmd = strtok(buffer, " ");
+    cmd = strtok(buffer, " ");
 
     // 2. Check if the command is "echo"
     if (cmd != NULL && strcmp(cmd, "hazelnut") == 0) {
         // 3. Get the rest of the string as the argument
-        char *arg = strtok(NULL, "");
+        arg = strtok(NULL, "");
 
         if (s == NULL || s[0] == '\0') {
             print_uart0("Error: No file specified.\n\r");
             return;
         }
 
-        char *full_path = FILESYSTEM_MERGE_PATHS(FILESYSTEM_CURRENT_WORKING_DIRECTORY, arg);
+        full_path = FILESYSTEM_MERGE_PATHS(FILESYSTEM_CURRENT_WORKING_DIRECTORY, arg);
         if (full_path == NULL) {
             print_uart0("Error: Path resolution failed.\n");
             return;
         }
 
-        DriverResponse file = FILESYSTEM_GET_FILE(full_path);
+        file = FILESYSTEM_GET_FILE(full_path);
 
-        if (file.response_code == 0) {
+        if (file->response_code == 0) {
             hvm_print("Response code is NULL\n\r");
             return;
         }
-        hvm_print_int(&file.response_code);
+        hvm_print_int(&file->response_code);
         hvm_print("\n\r");
 
-        if (file.response_code == 10) {
-            hvm_print(file.data_char);
+        if (file->response_code == 10) {
+            hvm_print(file->data_char);
             hvm_print("\n\r");
 
         }
 
 
         // FIX: Check for failure BEFORE printing and BEFORE calling the VM
-        if (file.data_char == NULL) {
-            if (file.data_char) {
-                print_uart0(file.data_char); // Print the driver's error message
+        if (file->data_char == NULL) {
+            if (file->data_char) {
+                print_uart0(file->data_char); // Print the driver's error message
             } else {
                 print_uart0("Error: File not found or failed to load.\n\r");
             }
@@ -89,7 +93,7 @@ void command_hazelnut(const char *s) {
         }
 
         // Now it's safe to run
-        hazlenut_run_file(file.data_int);
+        hazlenut_run_file(file->data_int);
     }
 }
 

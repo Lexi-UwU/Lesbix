@@ -22,6 +22,8 @@
 
 #include "drivers/example_driver.h"
 
+#include "filesystem.h"
+
 
 char * FILESYSTEM_CURRENT_WORKING_DIRECTORY = "/";
 
@@ -51,7 +53,7 @@ int* FILESYSTEM_RUN_INT(const char *command,const char *path, const char *data) 
 }
 
 
-DriverResponse FILESYSTEM_RUN(const char *command,const char *path, const char *data) {
+DriverResponse *FILESYSTEM_RUN(const char *command,const char *path, const char *data) {
 #if defined(__arm__) || defined(__aarch64__)
     return EXAMPLE_DRIVER_RUN(command,path,data);
 #else
@@ -74,7 +76,7 @@ char *FILESYSTEM_GET_FILES(const char *path){
 
 
 
-DriverResponse FILESYSTEM_GET_FILE(const char *path){
+DriverResponse *FILESYSTEM_GET_FILE(const char *path){
     //Find driver and send appropriate command
 
 

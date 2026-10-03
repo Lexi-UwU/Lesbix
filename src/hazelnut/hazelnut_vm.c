@@ -4,7 +4,10 @@
     #include "hazelnut_out.h"
 #endif
 
-#include <stdio.h>
+#ifndef __CC65__
+    #include <stdio.h>
+#endif
+
 
 #include "../tools/utils.h"
 
@@ -12,7 +15,7 @@
 
 
 
-#include <stdlib.h>
+    #include <stdlib.h>
 
 int hazelnut_script_size = 5;
 int hazelnut_script_count = 0;
@@ -26,10 +29,16 @@ int hazelnut_vm_init(void) {
 }
 
 
-void add_hazelnut_script(struct hazelnut_script script) {
+void add_hazelnut_script(const struct hazelnut_script *script) {
+
+    int new_size;
+    struct hazelnut_script *temp;
+
+
+
     if (hazelnut_script_count >= hazelnut_script_size) {
-        int new_size = hazelnut_script_size * 2;
-        struct hazelnut_script *temp = realloc(
+        new_size = hazelnut_script_size * 2;
+        temp = realloc(
             hazelnut_script_array,
             new_size * sizeof(struct hazelnut_script)
         );
@@ -42,7 +51,7 @@ void add_hazelnut_script(struct hazelnut_script script) {
     }
 
     // Append the new script element to the array
-    hazelnut_script_array[hazelnut_script_count] = script;
+    memcpy(&hazelnut_script_array[hazelnut_script_count], script, sizeof(struct hazelnut_script));
     hazelnut_script_count++;
 }
 
@@ -69,7 +78,16 @@ void hazelnut_set_memory(struct hazelnut_script *script,int address, int value) 
 
 
 void hazelnut_proccess_byte(unsigned int byte, struct hazelnut_script *script) {
+
+    unsigned int idx;
+    unsigned int progress;
+    unsigned char *val;
     unsigned int count = script->internal_counter.byte_count;
+    int i;
+    int i_idx;
+    int i_prog;
+    struct hazelnut_script_object *obj;
+
 
     // 1. Signature check (Bytes 0 - 7)
     if (count == 7) {
@@ -108,8 +126,8 @@ void hazelnut_proccess_byte(unsigned int byte, struct hazelnut_script *script) {
             script->internal_counter.header_progress = 0;
         }
 
-        unsigned int idx = script->internal_counter.header_index;
-        unsigned int progress = script->internal_counter.header_progress;
+        idx = script->internal_counter.header_index;
+        progress = script->internal_counter.header_progress;
 
         // Parse 16-byte Header Objects (8 bytes key + 8 bytes value)
         if (script->header.objects != NULL && idx < script->header.key_count) {
@@ -135,9 +153,9 @@ void hazelnut_proccess_byte(unsigned int byte, struct hazelnut_script *script) {
                 int inst_count = 0;
 
                 // Match against "unixtime" key written by Python createHeader()
-                for (int i = 0; i < script->header.key_count; i++) {
+                for (i = 0; i < script->header.key_count; i++) {
                     if (memcmp(script->header.objects[i].key, "unixtime", 8) == 0) {
-                        unsigned char *val = script->header.objects[i].value;
+                        val = script->header.objects[i].value;
                         // Bytes 4..7 in value array contain the total instruction count
                         inst_count = (val[4] << 24) | (val[5] << 16) | (val[6] << 8) | val[7];
                         break;
@@ -157,10 +175,10 @@ void hazelnut_proccess_byte(unsigned int byte, struct hazelnut_script *script) {
             }
 
             // 2. Decode the 16-byte fixed instruction chunks into the objects array
-            int i_idx = script->internal_counter.instruction_index;
-            int i_prog = script->internal_counter.instruction_progress;
+            i_idx = script->internal_counter.instruction_index;
+            i_prog = script->internal_counter.instruction_progress;
 
-            struct hazelnut_script_object *obj = &script->objects[i_idx];
+            obj = &script->objects[i_idx];
 
             // Reset field values on progress start to clear old data
             if (i_prog == 0)  obj->address = 0;
@@ -205,12 +223,14 @@ void hazelnut_proccess_byte(unsigned int byte, struct hazelnut_script *script) {
 
 
 struct hazelnut_script_object *get_instruction_by_address(struct hazelnut_script *script, int target_address) {
+    int total_instructions;
+    int i;
     if (script == NULL || script->objects == NULL) return NULL;
 
     // Search through instruction_index (or instruction count)
-    int total_instructions = script->internal_counter.instruction_index;
+     total_instructions = script->internal_counter.instruction_index;
 
-    for (int i = 0; i < total_instructions; i++) {
+    for (i = 0; i < total_instructions; i++) {
         if (script->objects[i].address == target_address) {
             return &script->objects[i]; // Return pointer to matching object
         }
@@ -224,9 +244,13 @@ int hazelnut_get_memory(struct hazelnut_script *script, int address) {
 }
 
 int hazelnut_tick_script(struct hazelnut_script *script) {
+    struct hazelnut_script_object *instruction_object;
+    char opcode_str[3];
+    int data;
+
     if (!script) return 1;
 
-    struct hazelnut_script_object *instruction_object = get_instruction_by_address(script, script->program_counter);
+    instruction_object = get_instruction_by_address(script, script->program_counter);
 
     if (instruction_object == NULL) {
         //hvm_print("Error: No instruction found at address ");
@@ -238,11 +262,9 @@ int hazelnut_tick_script(struct hazelnut_script *script) {
         return -1;
     }
 
-    char opcode_str[3] = {
-        (char)(instruction_object->opcode >> 8),
-        (char)(instruction_object->opcode & 0xFF),
-        '\0'
-    };
+    opcode_str[0] = (char)(instruction_object->opcode >> 8);
+    opcode_str[1] = (char)(instruction_object->opcode & 0xFF);
+    opcode_str[2] = '\0';
     //hvm_print("\n\rCURRENT OPCODE: ");
     //hvm_print(opcode_str);
 
@@ -260,7 +282,7 @@ int hazelnut_tick_script(struct hazelnut_script *script) {
         //hvm_print("\n\r");
         //hvm_print("Printing value at");
         //hvm_print_int(&instruction_object->operand1);
-        int data = hazelnut_get_memory(script,instruction_object->operand1);
+        data = hazelnut_get_memory(script,instruction_object->operand1);
         hvm_print_int(&data);
         hvm_print("\n\r");
         //hazelnut_get_memory(script, instruction_object);
@@ -284,25 +306,32 @@ int hazelnut_tick_script(struct hazelnut_script *script) {
 
 void hazlenut_run_file(int *s){
 
+    unsigned char *byte_ptr;
+    unsigned char current_byte;
+    char buf[8];
+    struct hazelnut_script hazelnut_script = {0};;
+
     if (s == NULL) {
         hvm_print("Error: Invalid or uninitialized file pointer.\n");
         return;
     }
 
     // Cast the start pointer to inspect memory as raw 8-bit bytes
-    unsigned char *byte_ptr = (unsigned char *)s;
+    byte_ptr = (unsigned char *)s;
 
     // Loop until we hit the -1 terminator in 32-bit integer form
 
-    struct hazelnut_script hazelnut_script = {0};
+
 
 
     while (*(int *)byte_ptr != -1) {
-        unsigned char current_byte = *byte_ptr;
+        current_byte = *byte_ptr;
 
         // Process individual byte (e.g., format and print)
-        char buf[8];
-        snprintf(buf, sizeof(buf), "0x%02X ", current_byte);
+        buf[8];
+        #ifndef __CC65__
+            snprintf(buf, sizeof(buf), "0x%02X ", current_byte);
+        #endif
         //hvm_print(buf);
         hazelnut_proccess_byte(current_byte,&hazelnut_script);
 
