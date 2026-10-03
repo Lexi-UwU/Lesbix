@@ -20,12 +20,12 @@ void command_cd(const char *s){
     buffer[sizeof(buffer) - 1] = '\0';
 
     // 1. Tokenize to find the command
-    *cmd = strtok(buffer, " ");
+    cmd = strtok(buffer, " ");
 
     // 2. Check if the command is "echo"
     if (cmd != NULL && strcmp(cmd, "cd") == 0) {
         // 3. Get the rest of the string as the argument
-        *arg = strtok(NULL, "");
+        arg = strtok(NULL, "");
 
         if (arg != NULL) {
             // Send the parsed argument to UART

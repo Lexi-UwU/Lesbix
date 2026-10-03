@@ -42,7 +42,7 @@ void handle_command(const char *s) {
     buffer[sizeof(buffer) - 1] = '\0';
 
     // 2. Tokenize the COPY, not the original 's'
-    *cmd = strtok(buffer, " ");
+    cmd = strtok(buffer, " ");
 
     if (cmd == NULL) return; // Empty input
 

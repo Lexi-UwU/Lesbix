@@ -28,38 +28,47 @@
 char * FILESYSTEM_CURRENT_WORKING_DIRECTORY = "/";
 
 
-char* FILESYSTEM_RUN_CHAR(const char *command,const char *path, const char *data) {
-#if defined(__arm__) || defined(__aarch64__)
-    return EXAMPLE_DRIVER_RUN(command,path,data);
-#else
-#ifdef LESBIX_LINUX_FILE_DRIVER_H
-    DriverResponse resp = LINUX_FILE_DRIVER_RUN(command, path, data);
-    return resp.data_char;
-#endif
+    char* FILESYSTEM_RUN_CHAR(const char *command,const char *path, const char *data) {
+    #if defined(__arm__) || defined(__aarch64__)
+        return EXAMPLE_DRIVER_RUN(command,path,data);
+    #else
+        #ifdef LESBIX_LINUX_FILE_DRIVER_H
+            DriverResponse resp = LINUX_FILE_DRIVER_RUN(command, path, data);
+            return resp.data_char;
+        #else
+            return NULL;
+        #endif
     #endif
 
 }
 
 int* FILESYSTEM_RUN_INT(const char *command,const char *path, const char *data) {
-#if defined(__arm__) || defined(__aarch64__)
-    return EXAMPLE_DRIVER_RUN(command,path,data);
-#else
-#ifdef LESBIX_LINUX_FILE_DRIVER_H
-    DriverResponse resp = LINUX_FILE_DRIVER_RUN(command, path, data);
-    return resp.data_int;
-#endif
-#endif
+    #if defined(__arm__) || defined(__aarch64__)
+        return EXAMPLE_DRIVER_RUN(command,path,data);
+    #else
+        #ifdef LESBIX_LINUX_FILE_DRIVER_H
+            DriverResponse resp = LINUX_FILE_DRIVER_RUN(command, path, data);
+            return resp.data_int;
+        #else
+            return NULL;
+        #endif
+    #endif
 
 }
 
 
 DriverResponse *FILESYSTEM_RUN(const char *command,const char *path, const char *data) {
+    static DriverResponse resp;
+
+    (void)command;
+    (void)path;
+    (void)data;
 #if defined(__arm__) || defined(__aarch64__)
     return EXAMPLE_DRIVER_RUN(command,path,data);
 #else
 #ifdef LESBIX_LINUX_FILE_DRIVER_H
-    DriverResponse resp = LINUX_FILE_DRIVER_RUN(command, path, data);
-    return resp;
+    resp = LINUX_FILE_DRIVER_RUN(command, path, data);
+    return &resp;
 #endif
 #endif
 

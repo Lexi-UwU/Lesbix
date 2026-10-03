@@ -8,14 +8,17 @@
 
 
 
-DriverResponse FILESYSTEM_CREATE_ERROR_RESPONSE(const char *err_msg, int code) {
-    DriverResponse resp;
-    resp.size = strlen(err_msg);
-    resp.data_char = malloc(resp.size + 1);
-    if (resp.data_char) {
-        strcpy(resp.data_char, err_msg);
+DriverResponse *FILESYSTEM_CREATE_ERROR_RESPONSE(const char *err_msg, int code) {
+    DriverResponse *resp = malloc(sizeof(DriverResponse));
+    if (!resp) return NULL;
+
+    resp->size = strlen(err_msg);
+    resp->data_char = malloc(resp->size + 1);
+    if (resp->data_char) {
+        strcpy(resp->data_char, err_msg);
     }
-    resp.data_int = NULL;
-    resp.response_code = code;
+    resp->data_int = NULL;
+    resp->response_code = code;
+
     return resp;
 }

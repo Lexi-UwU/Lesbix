@@ -47,14 +47,14 @@ DriverResponse LINUX_FILE_DRIVER_FOLDER_READ(const char *path) {
 
     DIR *dir = opendir(full_path);
     if (!dir) {
-        return FILESYSTEM_CREATE_ERROR_RESPONSE("Error: Folder not found or cannot be opened", 10);
+        return *FILESYSTEM_CREATE_ERROR_RESPONSE("Error: Folder not found or cannot be opened", 10);
     }
 
     size_t buffer_size = 4096;
     char *buffer = malloc(buffer_size);
     if (!buffer) {
         closedir(dir);
-        return FILESYSTEM_CREATE_ERROR_RESPONSE("Error: Memory allocation failed", 10);
+        return *FILESYSTEM_CREATE_ERROR_RESPONSE("Error: Memory allocation failed", 10);
     }
 
     strcpy(buffer, "001\n");
@@ -73,7 +73,7 @@ DriverResponse LINUX_FILE_DRIVER_FOLDER_READ(const char *path) {
             if (!new_buffer) {
                 free(buffer);
                 closedir(dir);
-                return FILESYSTEM_CREATE_ERROR_RESPONSE("Error: Memory reallocation failed", 10);
+                return *FILESYSTEM_CREATE_ERROR_RESPONSE("Error: Memory reallocation failed", 10);
             }
             buffer = new_buffer;
         }
@@ -99,7 +99,7 @@ DriverResponse LINUX_FILE_DRIVER_FOLDER_READ(const char *path) {
 
 DriverResponse LINUX_FILE_DRIVER_FILE_READ(const char *path) {
     if (path == NULL || path[0] == '\0') {
-        return FILESYSTEM_CREATE_ERROR_RESPONSE("Error: Invalid path", 10);
+        return *FILESYSTEM_CREATE_ERROR_RESPONSE("Error: Invalid path", 10);
     }
 
     char full_path[512];
@@ -110,7 +110,7 @@ DriverResponse LINUX_FILE_DRIVER_FILE_READ(const char *path) {
         hvm_print("FILE IS NULL\n\r");
         hvm_print(path);
         hvm_print("\n\r");
-        return FILESYSTEM_CREATE_ERROR_RESPONSE("Error: File not found or cannot be opened", 10);
+        return *FILESYSTEM_CREATE_ERROR_RESPONSE("Error: File not found or cannot be opened", 10);
     }
 
     fseek(file, 0, SEEK_END);
@@ -120,7 +120,7 @@ DriverResponse LINUX_FILE_DRIVER_FILE_READ(const char *path) {
     if (file_size < 0) {
 
         fclose(file);
-        return FILESYSTEM_CREATE_ERROR_RESPONSE("Error: Failed to measure file size", 10);
+        return *FILESYSTEM_CREATE_ERROR_RESPONSE("Error: Failed to measure file size", 10);
     }
 
     // Pad file_size to ensure the sentinel location is aligned to sizeof(int)
@@ -132,7 +132,7 @@ DriverResponse LINUX_FILE_DRIVER_FILE_READ(const char *path) {
     char *buffer = malloc(total_alloc_size);
     if (!buffer) {
         fclose(file);
-        return FILESYSTEM_CREATE_ERROR_RESPONSE("Error: Memory allocation failed", 10);
+        return *FILESYSTEM_CREATE_ERROR_RESPONSE("Error: Memory allocation failed", 10);
     }
 
     // Zero out padding bytes
@@ -144,7 +144,7 @@ DriverResponse LINUX_FILE_DRIVER_FILE_READ(const char *path) {
 
     if (read_bytes != (size_t)file_size) {
         free(buffer);
-        return FILESYSTEM_CREATE_ERROR_RESPONSE("Error: Failed to read file contents", 10);
+        return *FILESYSTEM_CREATE_ERROR_RESPONSE("Error: Failed to read file contents", 10);
     }
 
     // 1. Text terminator (ensures safe string operations if treating as text)
@@ -170,8 +170,8 @@ DriverResponse LINUX_FILE_DRIVER_RUN(const char *command, const char *path, cons
     } else if (strcmp(command, FILESYSTEM_CONSTS_FILE_WRITE) == 0) {
         // Handle file write implementation here
     } else {
-        return FILESYSTEM_CREATE_ERROR_RESPONSE("011\n INVALID COMMAND",11);
+        return *FILESYSTEM_CREATE_ERROR_RESPONSE("011\n INVALID COMMAND",11);
     }
 
-    return FILESYSTEM_CREATE_ERROR_RESPONSE("012\n how..... how did you even get here?",12);
+    return *FILESYSTEM_CREATE_ERROR_RESPONSE("012\n how..... how did you even get here?",12);
 }

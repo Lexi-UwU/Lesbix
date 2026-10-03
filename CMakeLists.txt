@@ -19,6 +19,7 @@ set(CORE_C_SRCS
     src/commands/pwd.c
     src/file/drivers/example_driver.c
     src/file/consts.c
+    src/file/error_message.c
     src/file/filesystem.c
     src/hazelnut/hazelnut_out.c
     src/hazelnut/hazelnut_vm.c
@@ -143,5 +144,6 @@ else()
         src/graphics/graphics.c
         src/file/drivers/linux_file_driver.c
         src/file/drivers/linux_file_driver.h
+
     )
 endif()
