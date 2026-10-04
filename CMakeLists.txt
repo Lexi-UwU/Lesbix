@@ -26,7 +26,7 @@ set(CORE_C_SRCS
     src/hazelnut/hazelnut_vm.c
     src/tools/halt.c
     src/tools/utils.c
-    src/graphics/vga/graphics_vga.c
+    #src/graphics/vga/graphics_vga.c
     src/graphics/vga/initialise.c
     src/graphics/vga/vga.c
     src/graphics/vga/vgatext.c
@@ -34,15 +34,9 @@ set(CORE_C_SRCS
     src/handle_command/handle_command.c
     src/main.c
     src/uart/uart.c
-
     src/basic/basic.c
     src/basic/basic_graphics.c
-
     src/graphics/graphics.c
-
-
-
-
 )
 
 set(HEADERS
@@ -75,7 +69,7 @@ set(HEADERS
     src/basic/basic.h
     src/basic/basic_graphics.h
 
-    src/graphics/graphics.h
+    #src/graphics/graphics.h
 
 )
 
@@ -84,7 +78,7 @@ set(HEADERS
 # ------------------------------------------------------------------------------
 
 if(TARGET_CAT65)
-    # ==========================================================================
+# ==========================================================================
     # 65C02 / CC65 Build Target
     # ==========================================================================
     message(STATUS "Configuring build for 65C02 (Cat65 CC65 Toolchain)...")
@@ -96,6 +90,9 @@ if(TARGET_CAT65)
     set(CAT65_CFG "${CMAKE_CURRENT_SOURCE_DIR}/build-config/cat65/config.cfg")
     set(CAT65_CRT0 "${CMAKE_CURRENT_SOURCE_DIR}/build-config/cat65/crt0.s")
 
+    # Ensure assembly output directory exists inside the build tree
+    file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/asm")
+
     # Assemble crt0.s startup file
     set(CRT0_OBJ "${CMAKE_CURRENT_BINARY_DIR}/crt0.o")
     add_custom_command(
@@ -106,31 +103,41 @@ if(TARGET_CAT65)
     )
 
     set(ALL_6502_OBJS ${CRT0_OBJ})
+    set(ALL_ASM_FILES "")
 
-    # Rule: Process each C source through cc65 -> ca65 -> .o
     # Rule: Process each C source through cc65 -> ca65 -> .o
     foreach(c_file ${CORE_C_SRCS})
         # Generate a unique path key by replacing slashes with underscores
         string(REPLACE "/" "_" fname_unique "${c_file}")
         string(REPLACE ".c" "" fname_clean "${fname_unique}")
 
-        set(asm_out "${CMAKE_CURRENT_BINARY_DIR}/${fname_clean}.s")
+        set(asm_out "${CMAKE_CURRENT_BINARY_DIR}/asm/${fname_clean}.s")
         set(obj_out "${CMAKE_CURRENT_BINARY_DIR}/${fname_clean}.o")
 
         add_custom_command(
-            OUTPUT ${obj_out}
-            COMMAND ${CC65_BIN} --cpu 65C02 -O -I ${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAKE_CURRENT_SOURCE_DIR}/${c_file} -o ${asm_out}
+            OUTPUT ${obj_out} ${asm_out}
+            COMMAND ${CC65_BIN} --cpu 65C02 -O --add-source -I ${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAKE_CURRENT_SOURCE_DIR}/${c_file} -o ${asm_out}
             COMMAND ${CA65_BIN} --cpu 65C02 ${asm_out} -o ${obj_out}
             DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${c_file} ${HEADERS}
             COMMENT "Compiling & Assembling (65C02): ${c_file}"
         )
         list(APPEND ALL_6502_OBJS ${obj_out})
+        list(APPEND ALL_ASM_FILES ${asm_out})
     endforeach()
+
+    # Rule: Concatenate crt0.s and all generated assembly files into full.s
+    set(FULL_ASM_OUT "${CMAKE_CURRENT_BINARY_DIR}/asm/full.s")
+    add_custom_command(
+        OUTPUT ${FULL_ASM_OUT}
+        COMMAND ${CMAKE_COMMAND} -E cat ${CAT65_CRT0} ${ALL_ASM_FILES} > ${FULL_ASM_OUT}
+        DEPENDS ${CAT65_CRT0} ${ALL_ASM_FILES}
+        COMMENT "Combining assembly files into asm/full.s"
+    )
 
     # Link step via ld65
     add_custom_target(cat65 ALL
         COMMAND ${LD65_BIN} -C ${CAT65_CFG} ${ALL_6502_OBJS} none.lib -o ${CMAKE_CURRENT_BINARY_DIR}/program.c65
-        DEPENDS ${ALL_6502_OBJS}
+        DEPENDS ${ALL_6502_OBJS} ${FULL_ASM_OUT}
         COMMENT "Linking 65C02 binary with ld65 -> program.c65"
     )
 
