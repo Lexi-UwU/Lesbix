@@ -30,7 +30,7 @@ void delay(int count) {
 
 #include "./commands/help.h"
 #include "./commands/basic.h"
-
+#include "./file/filesystem.h"
 
 int main(void) {
     //initialise_lcd();
@@ -50,6 +50,8 @@ int main(void) {
     LESBIX_RUNNING = 1;
 
     init_uart0();
+
+    FILESYSTEM_INIT();
 
 
     //#ifdef __CC65__

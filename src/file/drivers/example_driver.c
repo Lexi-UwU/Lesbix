@@ -40,7 +40,7 @@ char* EXAMPLE_DRIVER_FILE_READ(const char *path){
         return ""; // String literal is stored in ROM
     }
 
-    if (strcmp(path, "/test.basic") == 0) {
+    if (strcmp(path, "/test.basic") == 0 || strcmp(path, "//test.basic") == 0)  {
         return "10 PRINT \"HELLO WORLD\" \n END"; // String literal is stored in ROM
     }
     return "010\nError: Path not found";

@@ -29,22 +29,24 @@ char * FILESYSTEM_CURRENT_WORKING_DIRECTORY = "/";
 
 
     char* FILESYSTEM_RUN_CHAR(const char *command,const char *path, const char *data) {
-    #if defined(__arm__) || defined(__aarch64__)
-        return EXAMPLE_DRIVER_RUN(command,path,data);
-    #else
-        #ifdef LESBIX_LINUX_FILE_DRIVER_H
-            DriverResponse resp = LINUX_FILE_DRIVER_RUN(command, path, data);
-            return resp.data_char;
+        DriverResponse resp;
+        #if defined(__arm__) || defined(__aarch64__)|| defined(__CC65__)
+            return EXAMPLE_DRIVER_RUN(command,path,data);
         #else
-            return NULL;
+            #ifdef LESBIX_LINUX_FILE_DRIVER_H
+                DriverResponse resp = LINUX_FILE_DRIVER_RUN(command, path, data);
+                return resp.data_char;
+            #else
+                return NULL;
+            #endif
         #endif
-    #endif
 
 }
 
 int* FILESYSTEM_RUN_INT(const char *command,const char *path, const char *data) {
-    #if defined(__arm__) || defined(__aarch64__)
+    #if defined(__arm__) || defined(__aarch64__) || defined(__CC65__)
         return EXAMPLE_DRIVER_RUN(command,path,data);
+
     #else
         #ifdef LESBIX_LINUX_FILE_DRIVER_H
             DriverResponse resp = LINUX_FILE_DRIVER_RUN(command, path, data);
@@ -63,14 +65,20 @@ DriverResponse *FILESYSTEM_RUN(const char *command,const char *path, const char 
     (void)command;
     (void)path;
     (void)data;
-#if defined(__arm__) || defined(__aarch64__)
-    return EXAMPLE_DRIVER_RUN(command,path,data);
-#else
-#ifdef LESBIX_LINUX_FILE_DRIVER_H
-    resp = LINUX_FILE_DRIVER_RUN(command, path, data);
-    return &resp;
-#endif
-#endif
+    #if defined(__arm__) || defined(__aarch64__)
+        return EXAMPLE_DRIVER_RUN(command,path,data);
+
+    #elif defined(__CC65__)
+        // CORRECT: Put the string into the struct, then return the struct
+        resp.data_char = EXAMPLE_DRIVER_RUN(command, path, data);
+        return &resp;
+    #else
+        #ifdef LESBIX_LINUX_FILE_DRIVER_H
+            resp = LINUX_FILE_DRIVER_RUN(command, path, data);
+            return &resp;
+        #endif
+        return NULL;
+    #endif
 
 }
 
@@ -144,4 +152,7 @@ char *FILESYSTEM_MERGE_PATHS(const char *path1, const char *path2) {
 
 
 
+void FILESYSTEM_INIT(){
+    FILESYSTEM_CURRENT_WORKING_DIRECTORY = "/";
+}
 

@@ -20,5 +20,6 @@ int *FILESYSTEM_GET_FILE_INT(const char *path);
 
 int FILESYSTEM_SET_DIRECTORY(char *path);
 char *FILESYSTEM_MERGE_PATHS(const char *path1, const char *path2);
+void FILESYSTEM_INIT(void);
 
 #endif //LESBIX_FILESYSTEM_H
