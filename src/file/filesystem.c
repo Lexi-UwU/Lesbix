@@ -94,11 +94,21 @@ char *FILESYSTEM_GET_FILES(const char *path){
 
 
 void FILESYSTEM_GET_FILE(const char *path, DriverResponse *out_resp){
-    //Find driver and send appropriate command
-
-
-    out_resp->data_char = EXAMPLE_DRIVER_RUN(FILESYSTEM_CONSTS_FILE_READ, path, "");
-
+    char *result = EXAMPLE_DRIVER_RUN(FILESYSTEM_CONSTS_FILE_READ, path, "");
+    
+    out_resp->data_char = result;
+    
+    if (result != NULL) {
+        char code_buf[4];
+        int i;
+        for(i = 0; i < 3 && result[i] != '\0'; i++) {
+            code_buf[i] = result[i];
+        }
+        code_buf[3] = '\0';
+        out_resp->response_code = atoi(code_buf);
+    } else {
+        out_resp->response_code = 0;
+    }
 }
 
 char *FILESYSTEM_GET_FILE_CHAR(const char *path){

@@ -44,7 +44,7 @@ char* EXAMPLE_DRIVER_FILE_READ(const char *path){
 
 
     if (strcmp(path, ram_path) == 0 || strcmp(path, "//test.basic") == 0)  {
-        return "10 PRINT \"HELLO WORLD\" \n END"; // String literal is stored in ROM
+        return "010\n10 PRINT \"HELLO WORLD\" \n END"; // String literal is stored in ROM
     }
     return "010\nError: Path not found";
 }
