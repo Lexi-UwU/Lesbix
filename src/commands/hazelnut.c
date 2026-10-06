@@ -42,7 +42,8 @@ void command_hazelnut(const char *s) {
     char *cmd;
     char *full_path;
     char *arg;
-    DriverResponse *file;
+    DriverResponse file;
+
     // Copy input safely
     strncpy(buffer, s, sizeof(buffer) - 1);
     buffer[sizeof(buffer) - 1] = '\0';
@@ -66,26 +67,27 @@ void command_hazelnut(const char *s) {
             return;
         }
 
-        file = FILESYSTEM_GET_FILE(full_path);
+        //file = FILESYSTEM_GET_FILE(full_path);
+        FILESYSTEM_GET_FILE(full_path, &file); // Pass address of the local struct
 
-        if (file->response_code == 0) {
+        if (file.response_code == 0) {
             hvm_print("Response code is NULL\n\r");
             return;
         }
-        hvm_print_int(&file->response_code);
+        hvm_print_int(&file.response_code);
         hvm_print("\n\r");
 
-        if (file->response_code == 10) {
-            hvm_print(file->data_char);
+        if (file.response_code == 10) {
+            hvm_print(file.data_char);
             hvm_print("\n\r");
 
         }
 
 
         // FIX: Check for failure BEFORE printing and BEFORE calling the VM
-        if (file->data_char == NULL) {
-            if (file->data_char) {
-                print_uart0(file->data_char); // Print the driver's error message
+        if (file.data_char == NULL) {
+            if (file.data_char) {
+                print_uart0(file.data_char); // Print the driver's error message
             } else {
                 print_uart0("Error: File not found or failed to load.\n\r");
             }
@@ -93,7 +95,7 @@ void command_hazelnut(const char *s) {
         }
 
         // Now it's safe to run
-        hazlenut_run_file(file->data_int);
+        hazlenut_run_file(file.data_int);
     }
 }
 

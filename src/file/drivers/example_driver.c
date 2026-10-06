@@ -35,12 +35,15 @@ char* EXAMPLE_DRIVER_FOLDER_READ(const char *path){
 
 
 char* EXAMPLE_DRIVER_FILE_READ(const char *path){
+    char ram_path[] = "/test.basic";
 
     if (strcmp(path, "/test.hazel") == 0) {
         return ""; // String literal is stored in ROM
     }
 
-    if (strcmp(path, "/test.basic") == 0 || strcmp(path, "//test.basic") == 0)  {
+
+
+    if (strcmp(path, ram_path) == 0 || strcmp(path, "//test.basic") == 0)  {
         return "10 PRINT \"HELLO WORLD\" \n END"; // String literal is stored in ROM
     }
     return "010\nError: Path not found";

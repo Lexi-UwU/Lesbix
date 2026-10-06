@@ -14,7 +14,7 @@ extern char *FILESYSTEM_CURRENT_WORKING_DIRECTORY;
 
 // Function declarations
 char *FILESYSTEM_GET_FILES(const char *path);
-DriverResponse *FILESYSTEM_GET_FILE(const char *path);
+void FILESYSTEM_GET_FILE(const char *path, DriverResponse *out_resp);
 char *FILESYSTEM_GET_FILE_CHAR(const char *path);
 int *FILESYSTEM_GET_FILE_INT(const char *path);
 

@@ -9,5 +9,6 @@ void print_uart0(const char *s);
 void send_uart0(char c);
 char read_uart0(void);
 void init_uart0(void);
+void print_int_uart0(int n);
 
 #endif //LESBIX_UART_H

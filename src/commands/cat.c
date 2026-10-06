@@ -17,6 +17,8 @@ void command_cat(const char *s){
 
     char buffer[64];
     char *cmd;
+    char *temp_path;
+    DriverResponse resp; // Local struct on the stack
     // Copy input safely
     strncpy(buffer, s, sizeof(buffer) - 1);
     buffer[sizeof(buffer) - 1] = '\0';
@@ -32,7 +34,19 @@ void command_cat(const char *s){
         if (arg != NULL) {
             // Send the parsed argument to UART
             //print_uart0(arg);
-            print_uart0(FILESYSTEM_GET_FILE(FILESYSTEM_MERGE_PATHS(FILESYSTEM_CURRENT_WORKING_DIRECTORY, arg))->data_char);
+            temp_path = FILESYSTEM_MERGE_PATHS(FILESYSTEM_CURRENT_WORKING_DIRECTORY, arg);
+
+            print_uart0("\n LENGTH: ");
+
+            print_int_uart0(strlen(temp_path));
+
+            print_uart0(temp_path);
+
+            print_uart0("\n");
+
+            FILESYSTEM_GET_FILE(temp_path, &resp);
+
+            print_uart0(resp.data_char);
         }
         send_uart0('\n');
     }

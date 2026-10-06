@@ -88,6 +88,23 @@ void init_uart0(){
 
 }
 
+void print_int_uart0(int n) {
+    char buf[10];
+    int i = 0;
+    if (n == 0) {
+        send_uart0('0');
+        return;
+    }
+
+    while (n > 0) {
+        buf[i++] = (n % 10) + '0';
+        n /= 10;
+    }
+    while (i > 0) {
+        send_uart0(buf[--i]);
+    }
+}
+
 
 char read_uart0(void) {
 

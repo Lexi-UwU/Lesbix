@@ -158,12 +158,16 @@ void *memcpy(void *dest, const void *src, size_t n) {
 extern char _end; // Defined in your linker script at the end of .bss
 static char *heap_ptr = &_end;
 
+static char heap_space[1024];
+static size_t heap_offset = 0;
+
 void *malloc(size_t size) {
-    void *ptr = (void *)heap_ptr;
-    heap_ptr += size; // Simply "bump" the pointer forward
+    void *ptr;
+    if (heap_offset + size > 1024) return NULL;
+    ptr = &heap_space[heap_offset];
+    heap_offset += size;
     return ptr;
 }
-
 
 int atoi(const char *str) {
     int result = 0;

@@ -256,8 +256,13 @@ static void LESBIX_LOAD_LINE(const char *line){
 
 
 void LESBIX_BASIC_LOAD_PROGRAM(const char *path){
+    DriverResponse file_resp;
     char *line;
-    char *file_contents = FILESYSTEM_GET_FILE(path)->data_char;
+    char *file_contents;
+
+    FILESYSTEM_GET_FILE(path, &file_resp);
+
+    file_contents = file_resp.data_char;
 
     if (!file_contents) return;
 

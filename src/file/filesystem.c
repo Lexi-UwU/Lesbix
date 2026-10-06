@@ -93,11 +93,11 @@ char *FILESYSTEM_GET_FILES(const char *path){
 
 
 
-DriverResponse *FILESYSTEM_GET_FILE(const char *path){
+void FILESYSTEM_GET_FILE(const char *path, DriverResponse *out_resp){
     //Find driver and send appropriate command
 
 
-    return FILESYSTEM_RUN(FILESYSTEM_CONSTS_FILE_READ,path, "");
+    out_resp->data_char = EXAMPLE_DRIVER_RUN(FILESYSTEM_CONSTS_FILE_READ, path, "");
 
 }
 
