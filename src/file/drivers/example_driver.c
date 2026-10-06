@@ -28,7 +28,7 @@ char* EXAMPLE_DRIVER_FOLDER_READ(const char *path){
         return "001\nfile1.txt\nfile2.txt\ntest.hazel"; // String literal is stored in ROM
     }
     if (strcmp(path, "/") == 0) {
-        return "001\nfile1.txt\nfile2.txt"; // String literal is stored in ROM
+        return "001\nfile1.txt\nfile2.txt\ntest.basic"; // String literal is stored in ROM
     }
     return "010\nError: Path not found";
 }
@@ -38,6 +38,10 @@ char* EXAMPLE_DRIVER_FILE_READ(const char *path){
 
     if (strcmp(path, "/test.hazel") == 0) {
         return ""; // String literal is stored in ROM
+    }
+
+    if (strcmp(path, "/test.basic") == 0) {
+        return "10 PRINT \"HELLO WORLD\" \n END"; // String literal is stored in ROM
     }
     return "010\nError: Path not found";
 }

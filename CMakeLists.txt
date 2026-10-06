@@ -37,6 +37,7 @@ set(CORE_C_SRCS
     src/basic/basic.c
     src/basic/basic_graphics.c
     src/graphics/graphics.c
+    src/uart/screen.c
 )
 
 set(HEADERS
@@ -68,6 +69,8 @@ set(HEADERS
 
     src/basic/basic.h
     src/basic/basic_graphics.h
+
+    src/uart/screen.h
 
     #src/graphics/graphics.h
 

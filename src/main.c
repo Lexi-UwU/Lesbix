@@ -51,6 +51,11 @@ int main(void) {
 
     init_uart0();
 
+
+    //#ifdef __CC65__
+    //    __asm__("cli");
+    //#endif
+
     send_uart0(0x0c);
 
 

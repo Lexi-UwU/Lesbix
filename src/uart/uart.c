@@ -15,7 +15,7 @@
 
 #ifdef __CC65__
 #include "acia.c"
-#include "screen.c"
+#include "screen.h"
 
 #else
 

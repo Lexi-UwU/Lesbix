@@ -50,7 +50,7 @@ void vgc_enable_display(unsigned char bank) {
 
 
 
-static void vgc_output(){
+void vgc_output(){
 
     // 1. Calculate the inactive buffer (the one NOT currently displayed)
     int backBuffer = 1 - currentBuffer;

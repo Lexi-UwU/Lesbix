@@ -16,6 +16,9 @@ int cli_init(void) {
 
 void handle_cli(){
     char received = read_uart0();
+    //if (received == -1){
+    //    print_uart0(">");
+    //}
     if (received == '\r' || received == '\n'){
 
 #if defined(__arm__) || defined(__aarch64__)
@@ -24,8 +27,8 @@ void handle_cli(){
         send_uart0('\r');
 #else
 
-        //send_uart0('\n');
-        //send_uart0('\r');
+        send_uart0('\n');
+        send_uart0('\r');
 #endif
         line_buffer[command_buffer_index] = '\0';
         handle_command(line_buffer);
@@ -47,7 +50,7 @@ void handle_cli(){
 #if defined(__arm__) || defined(__aarch64__)
         send_uart0(received); // Echo the character back
 #else
-        //send_uart0(received);
+        send_uart0(received);
 
 #endif
     }

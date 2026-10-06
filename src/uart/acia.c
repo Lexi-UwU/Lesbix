@@ -11,6 +11,7 @@ typedef unsigned char bool;
 char acia_read(void) {
     // Bit 3 (%00001000) indicates the receiver data register is full
     while ((ACIA_STATUS & 0x08) == 0) {
+        //return -1;
         // Do nothing, wait for incoming hardware data
     }
     return ACIA_DATA;

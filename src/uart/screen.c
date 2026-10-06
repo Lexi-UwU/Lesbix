@@ -1,4 +1,6 @@
-#include "../graphics/graphics.c"
+#include "../graphics/graphics.h"
+#include "screen.h"
+
 
 
 
@@ -12,7 +14,7 @@ static int cursor_y;
 
 
 void screen_init(){
-    vgc_output();
+    GRAPHICS_INIT();
 }
 
 void screen_send(char c) {
