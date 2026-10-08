@@ -94,15 +94,15 @@ char *FILESYSTEM_GET_FILES(const char *path){
 
 
 void FILESYSTEM_GET_FILE(const char *path, DriverResponse *out_resp){
-    char *result = EXAMPLE_DRIVER_RUN(FILESYSTEM_CONSTS_FILE_READ, path, "");
+    DriverResponse resp = LINUX_FILE_DRIVER_RUN(FILESYSTEM_CONSTS_FILE_READ, path, "");
     
-    out_resp->data_char = result;
+    out_resp->data_char = resp.data_char;
     
-    if (result != NULL) {
+    if (resp.data_char != NULL) {
         char code_buf[4];
         int i;
-        for(i = 0; i < 3 && result[i] != '\0'; i++) {
-            code_buf[i] = result[i];
+        for(i = 0; i < 3 && resp.data_char[i] != '\0'; i++) {
+            code_buf[i] = resp.data_char[i];
         }
         code_buf[3] = '\0';
         out_resp->response_code = atoi(code_buf);

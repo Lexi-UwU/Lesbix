@@ -38,3 +38,11 @@ void GRAPHICS_INIT(){
 
 
 
+
+void GRAPHICS_PUT_PIXEL(int x, int y, int r, int g, int b){
+    #ifdef __CC65__
+        //vgc_put_tile(x,y,tile);
+    #elif defined(__DESKTOP__)
+        //SDL2_PUT_PIXEL(x, y, r, g, b);
+    #endif
+}

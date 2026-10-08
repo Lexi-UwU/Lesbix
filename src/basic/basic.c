@@ -73,6 +73,11 @@ static int LESBIX_BASIC_RUN_LINE(const char *line) {
     else if (strncmp(line, "IF ", 3) == 0) {
         return 1;
     }
+    else if (strncmp(line, "PLOT ", 5) == 0){
+        LESBIX_BASIC_GRAPHICS_SET_PIXEL(32,32,0,255,255);
+        return 1;
+
+    }
     else if (strchr(line, '=') != NULL) {
         return 1;
     }
@@ -222,6 +227,11 @@ static void LESBIX_LOAD_LINE(const char *line){
 
     if (!found_digits) {
         print_uart0("Syntax Error: Missing line number\n");
+        return;
+    }
+
+    if (line_number < 0 || line_number >= LESBIX_BASIC_MAX_LINES) {
+        print_uart0("Syntax Error: Line number out of range\n");
         return;
     }
 

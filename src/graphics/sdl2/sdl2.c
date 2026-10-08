@@ -6,6 +6,12 @@
 SDL_Window* global_window = NULL;
 SDL_Renderer* global_renderer = NULL;
 
+void SDL2_PUT_PIXEL(int x, int y, int r, int g, int b) {
+    if (!global_renderer) return;
+    SDL_SetRenderDrawColor(global_renderer, r, g, b, 255);
+    SDL_RenderDrawPoint(global_renderer, x, y);
+}
+
 int SDL2_INIT(void) {
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         printf("SDL Init Error: %s\n", SDL_GetError());
