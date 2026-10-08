@@ -29,5 +29,6 @@ void LESBIX_BASIC_GRAPHICS_SET_TILE(int x, int y, int tile){
 void LESBIX_BASIC_GRAPHICS_SET_PIXEL(int x, int y, int r, int g, int b){
 
     GRAPHICS_PUT_PIXEL(x,y,r,g,b);
+    GRAPHICS_UPDATE();
 }
 
