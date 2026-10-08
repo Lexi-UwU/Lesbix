@@ -4,6 +4,9 @@
 
 #include "../handle_command/handle_command.h"
 
+#include <stdio.h>
+#include <stdlib.h>
+
 
 #define MAX_BUF 128
 char line_buffer[MAX_BUF];
@@ -16,9 +19,13 @@ int cli_init(void) {
 
 void handle_cli(){
     char received = read_uart0();
-    //if (received == -1){
-    //    print_uart0(">");
-    //}
+    if (received == -1){
+        //print_uart0(">");
+        return;
+    } else{
+
+        //printf("Value: %d\n", received);
+    }
     if (received == '\r' || received == '\n'){
 
 #if defined(__arm__) || defined(__aarch64__)
@@ -47,11 +54,11 @@ void handle_cli(){
     else{
         line_buffer[command_buffer_index] = received; // Store character
         command_buffer_index++;
-#if defined(__arm__) || defined(__aarch64__)
-        send_uart0(received); // Echo the character back
-#else
-        send_uart0(received);
+        #if defined(__arm__) || defined(__aarch64__)
+            send_uart0(received); // Echo the character back
+        #else
+            send_uart0(received);
 
-#endif
+        #endif
     }
 }

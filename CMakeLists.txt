@@ -169,12 +169,25 @@ else()
     # ==========================================================================
     # Desktop Host Target
     # ==========================================================================
+
+
+    find_package(SDL2 REQUIRED)
     add_executable(Lesbix
         ${CORE_C_SRCS}
         ${HEADERS}
         src/graphics/graphics.c
+        src/graphics/sdl2/sdl2.c
+        src/graphics/sdl2/sdl2.h
         src/file/drivers/linux_file_driver.c
         src/file/drivers/linux_file_driver.h
 
     )
+
+    target_compile_definitions(Lesbix PRIVATE __DESKTOP__)
+
+    # Include SDL2 headers and link against the SDL2 library
+    target_include_directories(Lesbix PRIVATE ${SDL2_INCLUDE_DIRS})
+    target_link_libraries(Lesbix PRIVATE ${SDL2_LIBRARIES})
+
+
 endif()

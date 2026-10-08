@@ -32,6 +32,10 @@ void delay(int count) {
 #include "./commands/basic.h"
 #include "./file/filesystem.h"
 
+#if defined(__DESKTOP__)
+    #include "./graphics/graphics.h"
+#endif
+
 int main(void) {
     //initialise_lcd();
 
@@ -52,6 +56,10 @@ int main(void) {
     init_uart0();
 
     FILESYSTEM_INIT();
+
+    #if defined(__DESKTOP__)
+        GRAPHICS_INIT();
+    #endif
 
 
     //#ifdef __CC65__
@@ -78,7 +86,13 @@ int main(void) {
         //printf("Hello World!\n");
 
         //clear_screen(0xFFF);b
+        #if defined(__DESKTOP__)
+                GRAPHICS_UPDATE();
+
+        #endif
         handle_cli();
+
+        delay(1000);
 
     }
     halt();

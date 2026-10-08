@@ -34,7 +34,7 @@ char * FILESYSTEM_CURRENT_WORKING_DIRECTORY = "/";
             return EXAMPLE_DRIVER_RUN(command,path,data);
         #else
             #ifdef LESBIX_LINUX_FILE_DRIVER_H
-                DriverResponse resp = LINUX_FILE_DRIVER_RUN(command, path, data);
+                resp = LINUX_FILE_DRIVER_RUN(command, path, data);
                 return resp.data_char;
             #else
                 return NULL;

@@ -33,6 +33,13 @@
 
 #endif
 
+#if defined(__DESKTOP__)
+        #include <stdio.h>
+        #include <unistd.h>
+        #include <fcntl.h>
+        #include <termios.h>
+
+#endif
 void print_uart0(const char *s) {
 
     #ifdef __CC65__
@@ -52,6 +59,7 @@ void print_uart0(const char *s) {
 
     #else
     printf(s);
+    fflush(stdout);
     #endif
     #endif
 
@@ -70,6 +78,7 @@ void send_uart0(char c) {
     *UART0DR = (unsigned int)c;
     #else
     putchar(c);
+    fflush(stdout);
     #endif
     #endif
 }
@@ -84,6 +93,15 @@ void init_uart0(){
 
     screen_init();
 
+    #endif
+
+    #if defined(__DESKTOP__)
+        struct termios t;
+        tcgetattr(STDIN_FILENO, &t);
+        t.c_lflag &= ~(ICANON | ECHO); // Disable line buffering and echo
+        t.c_cc[VMIN] = 0;             // Return immediately if no data
+        t.c_cc[VTIME] = 0;            // No timeout
+        tcsetattr(STDIN_FILENO, TCSANOW, &t);
     #endif
 
 }
@@ -122,12 +140,26 @@ char read_uart0(void) {
     // 2. Read the received data from the Data Register
     return (char)(*UART0DR);
     #else
-    // Host fallback (e.g., standard input for testing on x86)
-    int c = getchar();
-    if (c == EOF) {
-        return '\0';
+
+        // Host fallback (e.g., standard input for testing on x86)
+        //int c = getchar();
+        //if (c == EOF) {
+        //    return '\0';
+        //}
+        //return (char)c;
+
+
+    // Host fallback (non-blocking POSIX read)
+    unsigned char ch;
+    ssize_t bytes_read = read(STDIN_FILENO, &ch, 1);
+
+    if (bytes_read == 1) { // Only return printable characters
+        return (int)ch;
     }
-    return (char)c;
+
+    return -1; // No input available right now
+
+
     #endif
 
     #endif
